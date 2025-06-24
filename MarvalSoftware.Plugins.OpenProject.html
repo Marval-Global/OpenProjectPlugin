@@ -1,0 +1,1391 @@
+﻿<script type="text/javascript" src="template.js"></script>
+<template>
+    <style>
+        .content {
+            border-radius: 10px !important;
+        }
+
+        .contentMarvalProjects {
+            border-radius: 30px;
+        }
+
+        .MarvalSoftware-OpenProject {
+            display: none;
+        }
+
+        .window .MarvalSoftware-OpenProject {
+            display: block;
+        }
+
+        .MarvalSoftware-OpenProject {
+            position: absolute;
+            top: 26px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .headerColourChange {
+            background: linear-gradient(to bottom right, #cbd6e2, #cbd6e2) !important;
+            color: #00314a !important;
+            font-size: 18px !important;
+            font-family: 'Inter', 'Open Sans', sans-serif;
+        }
+
+        .LinkedProjectsHeader {
+            /* background: linear-gradient(to bottom right,#cbd6e2,#cbd6e2) !important;  */
+            color: #00314a !important;
+            font-size: 12px !important;
+            font-family: 'Inter', 'Open Sans', sans-serif;
+        }
+
+            .LinkedProjectsHeader h1 {
+                /* background: linear-gradient(to bottom right,#cbd6e2,#cbd6e2) !important;  */
+                color: #00314a !important;
+                font-size: 12px !important;
+                font-family: 'Inter', 'Open Sans', sans-serif;
+            }
+
+        .window .content .header:first-of-type {
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
+
+        .MarvalSoftware-OpenProject a {
+            color: #3B73AF;
+        }
+
+        .MarvalSoftware-OpenProject > .header {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            right: 10px;
+            line-height: 30px;
+        }
+
+            .MarvalSoftware-OpenProject > .header > a {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 0;
+                text-decoration: none;
+            }
+
+        .MarvalSoftware-OpenProject > .issues {
+            position: absolute;
+            top: 50px;
+            bottom: 110px;
+            left: 10px;
+            right: 10px;
+            overflow: auto;
+            border: 1px solid #000;
+            background: no-repeat center center;
+        }
+
+            .MarvalSoftware-OpenProject > .issues > .issue {
+                position: relative;
+                padding: 10px;
+                height: 30px;
+                line-height: 30px;
+            }
+
+                .MarvalSoftware-OpenProject > .issues > .issue:nth-child(even) {
+                    background: #EBF2F9;
+                }
+
+                .MarvalSoftware-OpenProject > .issues > .issue > .left {
+                    position: absolute;
+                    left: 0;
+                    right: 200px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                    .MarvalSoftware-OpenProject > .issues > .issue > .left > * {
+                        margin-left: 10px;
+                    }
+
+                    .MarvalSoftware-OpenProject > .issues > .issue > .left > a {
+                        text-decoration: none;
+                    }
+
+                    .MarvalSoftware-OpenProject > .issues > .issue > .left > .status {
+                        display: inline-block;
+                        padding: 0 10px;
+                        border: 1px solid #DDD;
+                        border-radius: 5px;
+                        background: #FFF;
+                    }
+
+                .MarvalSoftware-OpenProject > .issues > .issue > .right {
+                    position: absolute;
+                    right: 0;
+                    width: 200px;
+                }
+
+                    .MarvalSoftware-OpenProject > .issues > .issue > .right > .assignee {
+                        box-sizing: border-box;
+                        position: absolute;
+                        right: 60px;
+                        padding: 0 10px;
+                        width: 140px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        text-align: center;
+                    }
+
+                    .MarvalSoftware-OpenProject > .issues > .issue > .right > .unlink {
+                        position: absolute;
+                        right: 10px;
+                        width: 50px;
+                        text-align: center;
+                        text-decoration: none;
+                        color: #F00;
+                    }
+
+        .MarvalSoftware-OpenProject > .newIssue {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            height: 100px;
+        }
+
+            .MarvalSoftware-OpenProject > .newIssue > h1 {
+                line-height: 30px;
+                bottom: 60px;
+                position: absolute;
+            }
+
+            .MarvalSoftware-OpenProject > .newIssue > .issueTypes {
+                position: absolute;
+                bottom: 50px;
+            }
+
+                .MarvalSoftware-OpenProject > .newIssue > .issueTypes > .typeLoading {
+                    position: absolute;
+                    background-repeat: no-repeat;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                    .MarvalSoftware-OpenProject > .newIssue > .issueTypes > .typeLoading > select {
+                        box-sizing: border-box;
+                        padding: 2px;
+                        height: 22px;
+                        max-width: 170px;
+                        min-width: 100px;
+                        width: 180px;
+                        border: 1px solid #CCC;
+                        position: absolute;
+                    }
+
+            .MarvalSoftware-OpenProject > .newIssue > .issueSummaryWrapper {
+                position: absolute;
+                left: 120px;
+                right: 90px;
+                bottom: 28px;
+            }
+
+                .MarvalSoftware-OpenProject > .newIssue > .issueSummaryWrapper > input {
+                    box-sizing: border-box;
+                    padding: 2px;
+                    position: relative;
+                    right: -70px;
+                    height: 22px;
+                    width: 100%;
+                    border: 1px solid #CCC;
+                }
+
+            .MarvalSoftware-OpenProject > .newIssue > button {
+                box-sizing: border-box;
+                position: absolute;
+                right: 0;
+                padding: 2px;
+                height: 22px;
+                width: 80px;
+                border: 1px solid #CCC;
+                border-radius: 2px;
+                cursor: pointer;
+                /*background: #9b9292; */
+                bottom: 28px;
+            }
+
+            .MarvalSoftware-OpenProject > .newIssue > .issueOptions {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+            }
+
+                .MarvalSoftware-OpenProject > .newIssue > .issueOptions > a {
+                    vertical-align: middle;
+                    font-size: 13px;
+                    text-decoration: none;
+                    color: #3B73AF;
+                    margin-right: 10px;
+                }
+
+                .MarvalSoftware-OpenProject > .newIssue > .issueOptions > label {
+                    vertical-align: middle;
+                    margin-bottom: 2px;
+                    color: #9b9da0;
+                }
+
+                .MarvalSoftware-OpenProject > .newIssue > .issueOptions > input {
+                    vertical-align: middle;
+                }
+
+        .attachmentHeader {
+            font-size: 13px;
+        }
+
+        .attachmentOptions {
+            margin-bottom: 5px;
+        }
+
+        .attachmentCheckboxes {
+            height: 200px;
+            overflow: auto;
+        }
+
+            .attachmentCheckboxes div {
+                margin-top: 10px;
+            }
+
+                .attachmentCheckboxes div input {
+                    margin-right: 5px;
+                    vertical-align: middle;
+                }
+
+        #responseContainer {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        #createProject{
+            width:2000px;
+            cursor:pointer;
+        }
+
+        #formattedResponse {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+
+    <div class="MarvalSoftware-OpenProject">
+        <select id="projectsDropdown"><option>Loading…</option> </select>
+        <br />
+        <button id="createProject">TAPTHISCREATEPROJECT</button>
+        <br />
+        <br />
+        <div class="header">
+            <h1>@@LinkedProjectsTitle</h1>
+            <a href="javascript:void(0);">@@Link</a>
+        </div>
+        
+        
+
+        <div class="issues">
+        </div>
+        <div class="testplugin">
+        </div>
+        <div class="newIssue">
+            <div class="issueTypes">
+                <div class="typeLoading">
+                    <select id="ProjectTemplateSelection" class="IssueTypeSelect">
+                        <option selected disabled value="">@@IssueTypeSelector</option>
+                    </select>
+                </div>
+            </div>
+            <div class="issueSummaryWrapper">
+                <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
+            </div>
+            <button>@@Create</button>
+            <!-- <div class="issueOptions">
+            <a href="javascript:void(0);" class="selectAttachments"></a>
+            <input type="checkbox" disabled />
+            <label>@@MSMContactReporter</label>
+        </div> -->
+        </div>
+
+    </div>
+</template>
+
+<template class="TestPluginTemplate">
+
+    <div class="test">
+        <div class="left">
+            <button>Test</button>
+        </div>
+
+    </div>
+
+</template>
+<template class="issueTemplate">
+    <div class="issue">
+        <div class="left">
+            <a href="javascript:void(0);" target="_blank" class="number"></a>
+            <span class="status"></span>
+            <span class="summary"></span>
+            <span class="tasks"></span>
+        </div>
+        <div class="right">
+            <span class="assignee"></span>
+            <a href="javascript:void(0);" class="unlink">@@Unlink</a>
+        </div>
+    </div>
+</template>
+<template class="errorTemplate">
+    <style>
+        .MarvalSoftware-OpenProject-Errors h3,
+        .MarvalSoftware-OpenProject-Errors h4 {
+            padding: 8px 0 8px 0;
+        }
+
+        .jiraConfig > li {
+            display: none;
+        }
+    </style>
+    <div class="MarvalSoftware-OpenProject-Errors">
+        <div class="title">
+            <h3>@@EnsureConfigurationSettingsCorrect</h3>
+        </div>
+        <div>
+            <ul class="jiraConfig">
+                <li id="jiraBaseUrl">@@JIRABaseUrl</li>
+                <li id="jiraCustomFieldID">@@JIRACustomFieldID</li>
+                <li id="jiraCustomFieldName">@@JIRACustomFieldName</li>
+                <li id="jiraUsername">@@JIRAUsername</li>
+                <li id="jiraPassword">@@JIRAPassword</li>
+                <li id="msmApiKey">@@MSMAPIKey</li>
+            </ul>
+            <h4></h4>
+        </div>
+    </div>
+</template>
+<template class="attachmentPopupTemplate">
+    <div class="MarvalSowftware-OpenProject-Popup-Attachments">
+        <p class="attachmentHeader">@@SelectRequestAttachmentHeader</p>
+        <br />
+        <div class="attachmentOptions">
+            <a href="javascript:void(0)" class="selectAll">@@SelectAllOption</a>
+            <span> | </span>
+            <a href="javascript:void(0)" class="selectNone">@@SelectNoneOption</a>
+        </div>
+        <div class="attachmentCheckboxes"></div>
+    </div>
+</template>
+<template class="attachmentTemplate">
+    <div class="MarvalSowftware-OpenProject-Attachments">
+        <input type="checkbox" class="attachmentCheckbox" />
+        <label class="attachmentLabel"></label>
+    </div>
+</template>
+<script>
+
+    (function () {
+
+        var MarvalSoftware = window.top.MarvalSoftware;
+        var $ = window.top.$;
+
+        MarvalSoftware.Plugins.define("marval-software-plugins-openproject",
+            {
+                _pluginPath: null,
+                _requestNumber: null,
+                _requestDescription: null,
+                _element: null,
+                _issuesElement: null,
+                _testElement: null,
+                _typeElement: null,
+                _summaryElement: null,
+                _createElement: null,
+                _htmlPrefix: null,
+                _renderIssuesRequest: null,
+                _typeLoadingElement: null,
+                _contactEmail: null,
+                _contactUsername: null,
+                _contactCheckbox: null,
+                _attachments: null,
+                _selectedAttachmentIds: null,
+                _selectAttachmentElement: null,
+                _issueOptionsElement: null,
+                _reporterCheckboxLabel: null,
+                _reporterCheckboxElement: null,
+                _attachmentsCheckboxList: null,
+
+                init: function () {
+                    openProject = this;
+                    console.log("In config item");
+                    setTimeout(() => {
+                        var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
+                        var currentUrl = window.top.location.href;
+                        if (currentUrl.includes("Plugin.aspx") && PWelement == 'MarvalSoftware.Plugins.OpenProject') {
+                            $("#" + "attributesControl_attribute_28_entry_28").val("test");
+                            const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
+                            $(keyelement2).val("test");
+                            keyelement2.style.display = 'none';
+                        }
+                    }, 1000);
+                    const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
+
+                    $(keyelement2).val("test");
+                    //
+                    const keyelement = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_key");
+                    if (keyelement) {
+                        keyelement.style.display = 'none';
+                    }
+                    function addItem(status = "", description = "") {
+                        if (typeof status !== "string") status = ""; // Ensure status is a string
+                        if (typeof description !== "string") description = ""; // Ensure description is a string
+
+                        const container = window.top.document.getElementById("itemsContainer");
+
+                        const div = window.top.document.createElement("div");
+                        div.className = "item";
+
+                        const statusInput = window.top.document.createElement("input");
+                        statusInput.type = "text";
+                        statusInput.value = status;
+                        statusInput.placeholder = "Marval Projects Stage";
+
+                        const descriptionInput = window.top.document.createElement("input");
+                        descriptionInput.type = "text";
+                        descriptionInput.value = description;
+                        descriptionInput.placeholder = "Marval Status";
+
+                        const removeButton = window.top.document.createElement("button");
+                        removeButton.innerHTML = "Remove";
+                        removeButton.onclick = function () {
+                            container.removeChild(div);
+                        };
+
+                        div.appendChild(statusInput);
+                        div.appendChild(descriptionInput);
+                        div.appendChild(removeButton);
+                        container.appendChild(div);
+                    }
+
+                    //function printAllProjects() {
+                    //    console.log("we are printing all projects");
+                    //    console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects" );
+                    //    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects", {
+                    //        method: "GET",
+                    //        headers: {
+                    //            "Content-Type": "application/json; charset=utf-8"
+                    //        }
+                    //                }).then(response => {
+                    //                    if (!response.ok) {
+                    //                        throw new Error("Network response was not ok: " + response.statusText);
+                    //                    }
+                    //                    return response.json()
+                        
+                    //}).then(result => {
+                    //    console.log("Projects Response:", result);
+
+                    //    console.log("We should be appending now");
+                        
+
+
+                    //    const $dropdown = $("#projectsDropdown");
+                    //    console.log("Dropdown length:", $dropdown.length);
+                    //    $dropdown.empty();
+
+                    //    $dropdown.append($('<option>', {
+                    //        value: '',
+                    //        text: '-- Select a project --'
+                    //    }));
+
+                    //    result._embedded.elements.forEach(project => {
+                    //        $dropdown.append($('<option>', {
+                    //            value: project.id,
+                    //            text: project.name
+                    //        }));
+                    //    });
+
+
+
+                    //}).catch(error => {
+                    //    console.error("Failed to fetch projects: ",error);
+                    //});
+                    //}
+
+                    //printAllProjects();
+
+                    function saveItems() {
+                        const container = window.top.document.getElementById("itemsContainer");
+                        const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                        const items = [];
+                        //     $('#saveItemsButton div').insertAfter('#saveItemsButton');
+                        $('#savebuttonConfirm').show();
+                        container.querySelectorAll(".item").forEach(div => {
+                            const status = div.querySelector("input:nth-child(1)").value;
+                            const description = div.querySelector("input:nth-child(2)").value;
+                            items.push([status, description]);
+                        });
+
+                        const data = { "items": items };
+                        field.value = JSON.stringify(data);
+                        // alert("Items saved!");
+                    }
+                    var style = $('<style>');
+
+                    // Add your CSS rules to the style element
+                    style.text(
+                        '.MarvalSoftware-OpenProject-quick-menu-item { ' +
+                        '   position: relative; ' +
+                        '} ' +
+                        '.MarvalSoftware-OpenProject-quick-menu-item::before { ' +
+                        '   content: "0"; ' +
+                        '   position: absolute; ' +
+                        '   bottom: 0; ' +
+                        '   left: 0; ' +
+                        '   background-color: red; ' +
+                        '   color: white; ' +
+                        '   width: 20px; ' +
+                        '   height: 20px; ' +
+                        '   border-radius: 50%; ' +
+                        '   display: flex; ' +
+                        '   justify-content: center; ' +
+                        '   align-items: center; ' +
+                        '}'
+                    );
+
+                    // Append the style element to the head section of your document
+                    $('head').append(style);
+                    $(document).ready(function() {
+                       // printAllProjects();
+                    });
+
+                    var currentUrl = window.top.location.href;
+
+                    var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
+
+                    if (currentUrl.includes("Plugin.aspx") && PWelement.includes('OpenProject')) {
+                        ////  $('#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value').css('width', '300px');
+                        //  $('#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_key').hide();
+                        //  $('#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value').hide();
+                        $('input#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value').closest('span.formSpan').hide();
+                        var template = document.querySelector('template').content;
+                        this._element = window.top.document.importNode(template, true);
+                        this._testElement = this._element.querySelector("#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet");
+                        $('#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet').append(`
+                        <fieldset style="width: 400px" id="fieldMapping">
+                        <br><span style="font-weight: bold">Marval Projects to MSM Field Mapping</span> <br><br>
+                        <div id="itemsContainer"></div>
+                        <button type="button" id="addNewItemButton">Add New Item</button>
+                        <button type="button" id="saveItemsButton">Save</button>
+
+                        <div id="savebuttonConfirm" style="color:green;font-weight:bold; display: none"><br><span style="color:green">Items Saved</span><br>Remember to click Apply on the bottom right to commit your changes</div>
+                        </fieldset>
+                        <br><br>
+                        <fieldset style="width: 400px" id="testPlugin">
+                            <legend>Test Plugin</legend>
+                            <span class="formSpan">
+                                <button id="testplugin">Test</button>
+                                <div id="responseContainer">
+                                    <pre id="formattedResponse"></pre>
+                                </div>
+                            </span>
+                        </fieldset>
+                    `);
+                        window.top.document.getElementById("addNewItemButton").onclick = addItem;
+                        window.top.document.getElementById("saveItemsButton").onclick = saveItems;
+
+                        var that = this;
+                        const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                        console.log("Value is ", field.value);
+                        const container = document.getElementById("itemsContainer");
+                        if (field.value) {
+                            const data = JSON.parse(field.value);
+                            const items = data.items;
+                            console.log("Adding item in main section");
+                            items.forEach((item, index) => {
+                                console.log("Items are %s and %s ", item[0], item[1]);
+                                addItem(item[0], item[1]);
+                            });
+                        }
+                        $(document).ready(function () {
+                            //printAllProjects();
+                            $('#testPlugin').on('click', '#testplugin', function (event) {
+                                //  window.top.document.getElementById('testPlugin').scrollIntoView();
+                                event.preventDefault(); // Prevent the default form submission behavior
+                                $('#formattedResponse').empty();
+                                $.ajax({
+                                    type: "GET",
+                                    url: that._getPluginPath() + "handler/ApiHandler.ashx?action=EndpointPingCheck",
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    success: function (response) {
+                                        //                         $('html, body').animate({
+                                        //     scrollTop: $('#testPlugin').offset().top
+                                        // }, 500);
+                                        // $(window).scrollTop(0);
+
+                                        if (response.errors) {
+                                            $('#formattedResponse').append('<span style="color:red">There was an error</span><br>');
+                                        } else {
+                                            $('#formattedResponse').append('<span style="color:green">Plugin response appeared to be successful, please see below.</span><br>');
+                                        }
+                                        var prettyResponse = JSON.stringify(response, null, 2);
+                                        $('#formattedResponse').append("Response<br>" + prettyResponse);
+
+
+                                        window.top.document.getElementById('testPlugin').scrollIntoView({
+                                            behavior: 'smooth'
+                                        });
+                                    },
+                                    error: function (xhr, status, error) {
+                                        $('#formattedResponse').append("There was an error<br>" + error);
+                                        console.error('AJAX request error:', status, error);
+                                        window.top.document.getElementById('testPlugin').scrollIntoView({
+                                            behavior: 'smooth'
+                                        });
+                                    }
+                                });
+                            });
+                        });
+
+                    } else {
+                        var currentUrl = window.top.location.href;
+                        if (currentUrl.includes("Request.aspx")) {
+                            //printAllProjects();
+                            this._requestNumber = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getRequestNumber();
+                            this._contactEmail = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getContactPreferredEmail();
+                            this._requestDescription = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getDescription();
+                            this._attachments = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getAttachments();
+                            //document.getElementById("createProject").onclick = openProject._createProject();
+                        } else {
+
+                        }
+
+
+
+                        this._selectedAttachmentIds = [];
+                        if (this._requestNumber) {
+                            this._setUpQuickMenu();
+                        }
+                    }
+                },
+                _loadItems: function () {
+                    var that = this;
+                    const field = document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                    const container = document.getElementById("itemsContainer");
+                    const items = JSON.parse(field.value);
+                    console.log("Adding item in load items ");
+                    items.forEach((item, index) => {
+                        that.addItem(item[0], item[1]);
+                    });
+                },
+                _preProcessResourceString: function (content) {
+                    var resourceTagRegEx = /@@\w+\b/g;
+                    var match = resourceTagRegEx.exec(content);
+
+                    while (match) {
+                        var foundTag = match[0];
+                        var resourcedKey = this._getString(foundTag);
+                        content = content.replace(foundTag, resourcedKey);
+
+                        var match = resourceTagRegEx.exec(content);
+                    }
+
+                    return content;
+                },
+                _renderProject: function (project) {
+
+                    var issueTemplate = document.querySelector(".issueTemplate").content;
+                    var issueElement = window.top.document.importNode(issueTemplate, true);
+                    var issueTemplateDiv = issueElement.querySelector(".issue");
+
+                    // var contentSel =  window.top.document.querySelector(".content");
+                    // window.top.document.querySelector('.content').classList.add('contentMarvalProjects');
+
+                    $(document).ready(function () {
+                        $(document).on('click', '.content', function () {
+                            var element = $(this);
+                            setTimeout(function () {
+                                element.addClass('contentMarvalProjects');
+                            }, 1000); // 1000 milliseconds = 1 second (adjust as needed)
+                        });
+                    });
+                    // $('.content').addClass('contentMarvalProjects');
+                    // contentSel.addClass('contentMarvalProjects');
+                    issueTemplateDiv.innerHTML = this._preProcessResourceString(issueTemplateDiv.innerHTML);
+                    var numberElement = issueElement.querySelector(".number");
+                    numberElement.textContent = project.title;
+                    numberElement.href = project.title;
+                    var count = 0;
+                    var countuncompleted = 0;
+                    $.each(project.tasks, function (index, task) {
+
+                        if (task.completedate === "") {
+                            count++; // Increment count if completedate is empty
+                        } else {
+                            countuncompleted++;
+                            count++;
+                        }
+                    });
+                    // numberElement.href = numberElement.protocol + "//" + numberElement.hostname + (numberElement.port ? ":" + numberElement.port : "") + "/browse/" + issue.key;
+                    numberElement.href = "https://app.openproject.com/" + this._htmlPrefix + "/?fuseaction=trackedprojects&fusesubaction=details&Jobs_currentJobID=" + project.id;
+                    issueElement.querySelector(".status").textContent = project.projectworkstages[0].name;
+                    // issueElement.querySelector(".summary").textContent = project.description;
+                    var itemsTotal = project.itemsActive + project.itemsCompleted;
+                    issueElement.querySelector(".tasks").textContent = project.itemsCompleted + "/" + itemsTotal; //countuncompleted + "/" + count + " Tasks Completed";
+                    issueElement.querySelector(".summary").title = project.title;
+                    issueElement.querySelector(".assignee").textContent = project.clientcontact.firstname + " " + project.clientcontact.lastname;
+                    issueElement.querySelector(".unlink").setAttribute("data-issue-number", project.id);
+                    if (!this._issuesElement.textContent.indexOf(issueElement.textContent) != -1) {
+                        this._issuesElement.appendChild(issueElement);
+                    }
+                },
+
+                _renderProjects: function () {
+                    if (this._renderIssuesRequest) {
+                        this._renderIssuesRequest.abort();
+                        this._renderIssuesRequest = null;
+                    }
+                    // this._getProjectTemplates();
+
+                    var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    this._renderIssuesRequest = $.ajax({
+                        type: "GET",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectProjects&requestId=" + RequestID + "&requestNumber=" + this._requestNumber,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            this._issuesElement.innerHTML = '';
+
+                            this._htmlPrefix = result.htmlPrefix;
+                            if (result.errors && result.errors[0]) {
+                                this._errorPopupMessage(result.errors[0].message);
+                            }
+                            var styleElement = window.top.document.createElement("style");
+                            window.top.document.body.appendChild(styleElement);
+                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + result.data.projects.length + "';  }", 0);
+                            this._issuesElement.style.backgroundImage = "";
+                            // result.issues.forEach(this._renderIssue.bind(this));
+                            result.data.projects.forEach(this._renderProject.bind(this));
+                        }.bind(this),
+                        error: function () {
+                            this._errorPopup();
+                        }.bind(this)
+                    });
+                },
+                _createProject: function () {
+                    const newProject = {
+                        name: "test"
+                    };
+                    console.log("we are now creating a project ", newProject);
+                    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        body:JSON.stringify(newProject)
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok: " + response.statusText);
+                        }
+                        return response.json()
+
+                    }).then(result => {
+                        console.log("project created successfully!, ", result);
+
+
+
+                    }).catch(error => {
+                        console.error("Failed to create projects: ", error);
+                    });
+                },
+                _loadProjectTemplates: function () {
+                    $.ajax({
+                        type: "GET",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            this._typeElement.style.backgroundImage = "";
+                            this._typeElement.style.display = 'block';
+                            var projectKeys = result.data.projects;
+                            $.each(projectKeys, function (index, template) {
+
+
+                                var option = document.createElement("option");
+                                option.text = template.title;
+                                option.id = template.id;
+
+                                $('.IssueTypeSelect').append(option);
+
+                            });
+
+                        }.bind(this),
+                        error: function () {
+                            this._errorPopup();
+                        }.bind(this)
+                    });
+                },
+
+
+
+                _printAllProjects: function() {
+            console.log("we are printing all projects");
+            console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects");
+            fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok: " + response.statusText);
+            }
+            return response.json()
+
+        }).then(result => {
+            console.log("Projects Response:", result);
+
+            console.log("We should be appending now");
+
+
+
+            const $dropdown = $("#projectsDropdown");
+            console.log("Dropdown length:", $dropdown.length);
+            $dropdown.empty();
+
+            $dropdown.append($('<option>', {
+                value: '',
+                text: '-- Select a project --'
+            }));
+
+            result._embedded.elements.forEach(project => {
+                $dropdown.append($('<option>', {
+                    value: project.id,
+                    text: project.name
+                }));
+            });
+
+
+
+        }).catch(error => {
+            console.error("Failed to fetch projects: ", error);
+        });
+    },
+                _loadProjectTemplates: function () {
+                    $.ajax({
+                        type: "GET",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            this._typeElement.style.backgroundImage = "";
+                            this._typeElement.style.display = 'block';
+                            var projectKeys = result.data.projects;
+                            $.each(projectKeys, function (index, template) {
+
+
+                                var option = document.createElement("option");
+                                option.text = template.title;
+                                option.id = template.id;
+
+                                $('.IssueTypeSelect').append(option);
+
+                            });
+
+                        }.bind(this),
+                        error: function () {
+                            this._errorPopup();
+                        }.bind(this)
+                    });
+                },
+
+                _getContactUsername: function () {
+                    if (this._contactEmail != null) {
+                        $.ajax({
+                            type: "GET",
+                            url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectUsers&contactEmail=" + this._contactEmail,
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (result) {
+                                if (result.length > 0) {
+                                    this._contactUsername = result[0]["name"];
+                                    this._reporterCheckboxElement.disabled = false;
+                                    this._reporterCheckboxLabel.style.color = "black";
+                                    this._reporterCheckboxLabel.innerText = this._reporterCheckboxLabel.innerText + " (" + this._contactUsername + ")";
+                                }
+                            }.bind(this),
+                            error: function () {
+                                this._errorPopup();
+                            }.bind(this)
+                        });
+                    }
+                },
+                _createNewProject: function (issueSummary, issueType, project) {
+
+                    this._issuesElement.style.backgroundImage = 'url("' + this._getPluginPath() + '/img/spinner.gif")';
+                    var CustomerID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._customerSearcher.getValue().Identifier;
+                    var CustomerName = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._customerSearcher.getValue().Name;
+                    var ContactID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._contactSearcher.getValue().Identifier;
+                    var ContactType = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._contactSearcher.getValue().Type;
+                    var ContactName = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._contactSearcher.getValue().Name;
+                    var ContactEmail = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._contactSearcher.getValue().Email;
+
+                    var trackerID = parseInt(MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._trackerPicker.getValue().Identifier);
+                    var trackerName = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._trackerPicker.getValue().Name;
+                    var assigneeID = parseInt(MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._assigneePicker.getValue().Identifier);
+                    var assigneeName = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._assigneePicker.getValue().Name;
+
+
+                    var serviceName = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._servicePicker.getValue().Name;
+
+                    var customerInfo = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._customerSearcher.getValue();
+                    var webhookurl = "https://" + window.location.hostname + this._getPluginPath() + "handler/ApiHandler.ashx?action=MoveStatusComplete";
+
+                    var RequestTypeAcronym = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestTypeAcronym;
+                    var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    var requestTypeWithNumber = RequestTypeAcronym + "-" + this._requestNumber;
+                    var projectSelectedValue = $('.IssueTypeSelect').val();
+                    // var projectSelectedId = "";
+                    //     var id = $("#selectId option:selected").attr("id")
+                    var ProjectID = $('#ProjectTemplateSelection option:selected').attr('id');
+                    var requestTempDescription = $('#projectDescription').val();
+                    console.log("May have description as ", requestTempDescription);
+                    //var newdescription = this._requestDescription;
+                    var newdescription = 'Created from Marval request  ' + requestTypeWithNumber + '   ' + this._requestDescription;
+                    // var projectSelectedId = $('.IssueTypeSelect').attr('id');
+                    console.log("Option selected is  ", ProjectID);
+                    var createProjectData = {
+                        "title": requestTempDescription,
+                        "priority": "3",
+                        "requestid": RequestID,
+                        "requestnumber": this._requestNumber,
+                        "number": requestTypeWithNumber,
+                        "startdate": "01/01/0001 00:00:00",
+                        "duedate": "01/01/0001 00:00:00",
+
+                        "categoryid": 5,
+                        "templateid": ProjectID,
+                        "webhookendpointurl": webhookurl,
+                        //"servicename": projectSelectedValue,
+                        customer: {
+                            id: CustomerID,
+                            name: CustomerName,
+                        },
+
+                        customercontact: {
+                            id: ContactID,
+                            name: ContactName,
+                            email: this._contactEmail
+                        },
+                        tracker: {
+                            id: trackerID,
+                            name: trackerName,
+                            type: "Person"
+                        },
+
+                        assignee: {
+                            id: assigneeID,
+                            name: assigneeName,
+                            type: "Person"
+                        }
+
+                    };
+                    var that = this;
+                    console.log("Sending to backend ", createProjectData);
+                    if (!projectSelectedValue) {
+                        this._errorPopupMessage("Please select a project template");
+                        this._issuesElement.style.backgroundImage = "";
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            url: this._getPluginPath() + "handler/ApiHandler.ashx?action=CreateOpenProjectProject&requestNumber=" + this._requestNumber + "&issueSummary=" +
+                                issueSummary + "&issueType=" + issueType + "&reporter=" + (this._contactUsername ? this._contactUsername : null) + "&description=" + newdescription + "&project=" + project + "&requestTypeAcronym=",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify(createProjectData),
+                            success: function (result) {
+
+                                this._clearIssues();
+                                this._renderProjects();
+                                if (result.errors) {
+                                    var stringJSON = JSON.stringify(result.errors);
+                                    this._errorPopupMessage(stringJSON);
+                                }
+                                that._issuesElement.style.backgroundImage = "";
+                            }.bind(this),
+                            error: function (xhr, status, error) {
+                                that._clearIssues();
+                                that._renderProjects();
+                                this._createElement.disabled = false;
+                            }.bind(this)
+                        });
+                    }
+                },
+                _clearIssues: function () {
+                    while (this._issuesElement.firstChild) {
+                        this._issuesElement.removeChild(this._issuesElement.firstChild);
+                    }
+                },
+                _unlinkIssue: function (issueNumber) {
+                    this._issuesElement.removeChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
+                    var that = this;
+                    $.ajax({
+                        type: "DELETE",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=UnlinkMarvalProjectsIssue&requestNumber=" + this._requestNumber + "&" + "issueNumber=" + issueNumber,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "text",
+                        success: function () {
+                            that._renderProjects();
+                        }.bind(this),
+                        error: function (error) {
+                            this._issuesElement.addChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
+                        }.bind(this)
+                    });
+                },
+
+                _linkIssue: function (issueNumber) {
+                    var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    $.ajax({
+                        type: "PUT",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=LinkOpenProjectProject&requestNumber=" + RequestID + "&issueNumber=" + issueNumber,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            this._clearIssues();
+                            this._renderProjects();
+                        }.bind(this)
+                    });
+                },
+
+                _renderElement: function () {
+                    var template = document.querySelector('template').content;
+                    this._element = window.top.document.importNode(template, true);
+                    var jiraTemplate = this._element.querySelector(".MarvalSoftware-OpenProject");
+                    jiraTemplate.innerHTML = this._preProcessResourceString(jiraTemplate.innerHTML);
+                    var eventManager = MarvalSoftware.UI.Dom.EventManager.getInstance();
+                    eventManager.addHandler(this._element.querySelector(".header > a"), "click", this._linkElement_click, this);
+                    this._issuesElement = this._element.querySelector(".issues");
+                    this._issuesElement.style.backgroundImage = 'url("' + this._getPluginPath() + '/img/spinner.gif")';
+                    eventManager.addHandler(this._issuesElement, "click", this._issuesElement_click, this);
+                    this._typeElement = this._element.querySelector(".newIssue > .issueTypes > .typeLoading > select");
+                    this._typeLoadingElement = this._element.querySelector(".newIssue > .issueTypes > .typeLoading");
+                    this._typeLoadingElement.style.backgroundImage = 'url("' + this._getPluginPath() + '/img/spinner.gif")';
+                    this._summaryElement = this._element.querySelector(".issueSummaryWrapper > input");
+                    this._createElement = this._element.querySelector("button");
+                    this._selectAttachmentElement = this._element.querySelector(".selectAttachments");
+                    // this._setSelectedAttachmentCount(0);
+                    this._contactCheckbox = this._element.querySelector(".issueOptions input");
+                    this._issueOptionsElement = this._element.querySelector(".issueOptions");
+
+                    this._sendMessageButton = this._element.querySelector("#createProject");
+                    eventManager.addHandler(this._sendMessageButton, "click", this._createProject, this);
+
+                    //this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
+                    //this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
+                    //eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
+                    eventManager.addHandler(this._createElement, "click", this._createElement_click, this);
+                    eventManager.addHandler(this._summaryElement, "input", this._handleInput, this);
+                    eventManager.addHandler(this._typeElement, "change", this._typeElement_change, this);
+                    this._typeElement.style.display = 'none';
+                    this.appendChild(this._element);
+                },
+                _PingCheck: function () {
+
+                    $.ajax({
+                        type: "GET",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=EndpointPingCheck",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.errors && result.errors[0]) {
+                                this._errorPopupMessage(result.errors[0].message);
+                            }
+                        }.bind(this),
+                        error: function (error) {
+                            console.log("Have response of ping check failure as ", error)
+                            this._errorPopup();
+                        }.bind(this)
+                    });
+                },
+                _handleInput: function () {
+                    this._summaryElement.value.length > 0 && this._typeElement.selectedIndex > 0 ? this._createElement.disabled = false : this._createElement.disabled = true;
+                },
+
+                _loadSummaryFromDescription: function () {
+                    this._summaryElement.value = this._requestDescription;
+                    this._summaryElement.select();
+                },
+
+                _renderAttachments: function (container) {
+                    for (var i = 0; i < this._attachments.length; i++) {
+                        var template = document.querySelector(".attachmentTemplate").content;
+                        var templateElement = window.top.document.importNode(template, true);
+                        var attachmentTemplateDiv = templateElement.querySelector(".MarvalSowftware-OpenProject-Attachments");
+                        attachmentTemplateDiv.innerHTML = this._preProcessResourceString(attachmentTemplateDiv.innerHTML);
+                        var checkboxLabel = templateElement.querySelector(".attachmentLabel");
+                        var checkbox = templateElement.querySelector(".attachmentCheckbox");
+                        checkbox.name = this._getString("@@AttachmentCheckBox");
+                        checkbox.value = this._attachments[i].Identifier;
+                        checkbox.id = this._attachments[i].Name;
+                        //checkbox.checked = this._selectedAttachmentIds.indexOf(this._attachments[i].Identifier) > -1 ? true : false;
+                        checkboxLabel.htmlFor = checkbox.id;
+                        checkboxLabel.innerHTML = checkbox.id + " (<strong>Size:</strong> " + (this._attachments[i].Length / 1000) + "kb)";
+                        container.appendChild(templateElement);
+                    }
+                },
+
+                _appendAttachments: function (attachmentIds, issueNumber) {
+                    $.ajax({
+                        type: "POST",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=SendAttachments&attachments=" + attachmentIds.join(',') + "&issueNumber=" + issueNumber,
+                        contentType: "text/html",
+                        success: function (response) {
+                            this._selectedAttachmentIds = [];
+                            this._setSelectedAttachmentCount(0);
+                        }.bind(this),
+                        error: function () {
+                            this._errorPopup();
+                        }.bind(this)
+                    });
+                },
+
+                _setSelectedAttachmentCount: function (count) {
+                    this._selectAttachmentElement.innerText = this._getString("@@SelectedAttachments", "" + count + "/" + this._attachments.length + "");
+                },
+
+                _showAttachmentsPopup: function (sender, e) {
+                    e.preventDefault();
+                    var eventManager = MarvalSoftware.UI.Dom.EventManager.getInstance();
+                    var template = document.querySelector('.attachmentPopupTemplate').content;
+                    var templateElement = window.top.document.importNode(template, true);
+                    var attachmentPopUpTemplateDiv = templateElement.querySelector(".MarvalSowftware-OpenProject-Popup-Attachments");
+                    attachmentPopUpTemplateDiv.innerHTML = this._preProcessResourceString(attachmentPopUpTemplateDiv.innerHTML);
+                    this._attachmentsCheckboxList = templateElement.querySelector(".attachmentCheckboxes");
+                    var selectAll = templateElement.querySelector(".selectAll");
+                    var selectNone = templateElement.querySelector(".selectNone");
+                    eventManager.addHandler(selectAll, "click", this._selectAllAttachments, this);
+                    eventManager.addHandler(selectNone, "click", this._deselectAllAttachments, this);
+                    // this._renderAttachments(this._attachmentsCheckboxList);
+                    // var attachmentPopup = MarvalSoftware.UI.MessageBox.show(
+                    //     this._getString("@@AttachmentPopUpTitle"),
+                    //     templateElement,
+                    //     MarvalSoftware.UI.MessageBox.INFORMATION,
+                    //     [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
+                    //     MarvalSoftware.UI.MessageBox.Buttons.OK,
+                    //     450,
+                    //     MarvalSoftware.createDelegate(function (sender, e) {
+                    //         if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
+                    //             for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
+                    //                 var checkbox = this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0];
+                    //                 var value = parseInt(checkbox.value, 10);
+                    //                 if (checkbox.checked && this._selectedAttachmentIds.indexOf(value) < 0) {
+                    //                     this._selectedAttachmentIds.push(value);
+                    //                 } else if (!checkbox.checked && this._selectedAttachmentIds.indexOf(value) > -1) {
+                    //                     var indexToRemove = this._selectedAttachmentIds.indexOf(value);
+                    //                     this._selectedAttachmentIds.splice(indexToRemove, 1);
+                    //                 }
+                    //             }
+                    //             this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
+                    //         }
+                    //     }, this)
+                    // );
+                },
+
+                _selectAllAttachments: function () {
+                    for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
+                        this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0].checked = true;
+                    }
+                },
+
+                _deselectAllAttachments: function () {
+                    for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
+                        this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0].checked = false;
+                    }
+                },
+
+
+
+                _popup: function () {
+                    if (!this._pluginWindow) {
+                        this._pluginWindow = new MarvalSoftware.UI.Window({
+                            appendToElement: window.top.document.getElementById("aspnetForm"),
+                            title: this._getString("@@PluginDisplayname"),
+                            height: 480,
+                            width: 750,
+                            minHeight: 262,
+                            minWidth: 432,
+                            isResizable: true,
+                            isMaximizable: true,
+                            bodyElement: this
+                        });
+                        this._printAllProjects();
+                        this._renderElement();
+                        this._loadSummaryFromDescription();
+                        this._renderProjects();
+                        this._loadProjectTemplates();
+
+                    }
+                    if (!this._pluginWindow.isVisible()) {
+                        this._pluginWindow.centerToViewport();
+                    }
+                    this._pluginWindow.show();
+                    this._summaryElement.focus();
+                    $('.window .content .header').eq(0).addClass('headerColourChange');
+                    $('.window .content .header').eq(1).addClass('LinkedProjectsHeader');
+                },
+
+                _errorPopup: function (result) {
+                    var errorTemplate = document.querySelector('.errorTemplate').content;
+                    var errorMessages = window.top.document.importNode(errorTemplate, true);
+                    var errorTemplateDiv = errorMessages.querySelector(".MarvalSoftware-OpenProject-Errors");
+                    errorTemplateDiv.innerHTML = this._preProcessResourceString(errorTemplateDiv.innerHTML);
+                    if (result) {
+                        for (var item in result) {
+                            var id = "#" + item;
+                            errorMessages.querySelector(id).style.display = "block";
+                        }
+                        errorMessages.querySelector('div > h3').textContent = this._getString("@@SettingsNotConfigured");
+                        errorMessages.querySelector('div > h4').textContent = this._getString("@@AddConfigurationViaPluginPage");
+                    }
+                    MarvalSoftware.UI.MessageBox.show(
+                        this._getString("@@InvalidOpenProjectConfiguration"),
+                        errorMessages,
+                        MarvalSoftware.UI.MessageBox.Types.ERROR,
+                        [MarvalSoftware.UI.MessageBox.Buttons.OK],
+                        MarvalSoftware.UI.MessageBox.Buttons.OK,
+                        450
+                    );
+                },
+                _errorPopupMessage: function (message) {
+                    var errorTemplate = document.querySelector('.errorTemplate').content;
+                    var errorMessages = window.top.document.importNode(errorTemplate, true);
+                    var errorTemplateDiv = errorMessages.querySelector(".MarvalSoftware-OpenProject-Errors");
+                    errorTemplateDiv.innerHTML = this._preProcessResourceString(errorTemplateDiv.innerHTML);
+                    if (message) {
+
+                        errorMessages.querySelector('div > h3').textContent = message;
+                    }
+                    MarvalSoftware.UI.MessageBox.show(
+                        this._getString("@@InvalidOpenProjectConfiguration"),
+                        errorMessages,
+                        MarvalSoftware.UI.MessageBox.Types.ERROR,
+                        [MarvalSoftware.UI.MessageBox.Buttons.OK],
+                        MarvalSoftware.UI.MessageBox.Buttons.OK,
+                        450
+                    );
+                },
+
+                _getPluginPath: function () {
+                    return this.attributes["data-pluginpath"].value;
+                },
+
+                _getPluginId: function () {
+                    return this.attributes["data-pluginid"].value;
+                },
+
+                _getPluginCulture: function () {
+                    return this.attributes["data-pluginculture"].value;
+                },
+
+                _getString: function (key, formatObject) {
+                    return MarvalSoftware.Plugins.PluginResourceManager.getInstance().getString(this._getPluginId(), key, this._getPluginCulture(), formatObject);
+                },
+
+                _setUpQuickMenu: function () {
+                    var styleElement = window.top.document.createElement("style");
+                    window.top.document.body.appendChild(styleElement);
+                    var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    console.log("Style element is ", styleElement);
+                    console.log("Style element sheet is ", styleElement.sheet);
+                    styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item { content: '2'; position: relative; background-image: url(" + this._getPluginPath() + "img/openproject_32.png); }", 0);
+                    $.ajax({
+                        type: "GET",
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectProjects&requestId=" + RequestID,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (result) {
+
+                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + result.data.projects.length + "';  }", 0);
+                        }.bind(this),
+                        error: function () {
+                            console.log("Have error loading projects")
+                        }.bind(this)
+                    });
+
+                    var quickMenuId = window.top.document.querySelector(".quickMenu").id;
+                    var quickMenu = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getControl(quickMenuId);
+                    quickMenu.addMenuItem({
+                        Identifier: "MarvalSoftware-OpenProject",
+                        Label: this._getString("@@PluginDisplayname"),
+                        HRef: "javascript:void(0);",
+                        CssClass: "MarvalSoftware-OpenProject-quick-menu-item"
+                    });
+
+                    quickMenu.onMenuItemClicked.subscribe(function (sender, e) {
+
+                        if (e.menuItem.getIdentifier() === "MarvalSoftware-OpenProject") {
+                            this._preRequisiteCheck();
+                        }
+                    }, this);
+                },
+
+                _preRequisiteCheck: function (sender, e) {
+                    this._popup();
+                    this._PingCheck();
+
+                },
+
+                _linkElement_click: function () {
+                    var divElement = window.top.document.createElement("DIV");
+                    divElement.innerHTML = this._getString("@@EnterOpenProjectIssueNumber");
+                    var aElement = divElement.getElementsByTagName("INPUT")[0];
+
+                    var messageBox = MarvalSoftware.UI.MessageBox.show(
+                        this._getString("@@LinkOpenProjectIssueTitle"),
+                        divElement,
+                        MarvalSoftware.UI.MessageBox.Types.INFORMATION,
+                        [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
+                        MarvalSoftware.UI.MessageBox.Buttons.OK,
+                        400,
+                        MarvalSoftware.createDelegate(function (sender, e) {
+                            if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
+                                this._linkIssue(aElement.value);
+                            }
+                        }, this)
+                    );
+
+                    MarvalSoftware.UI.Dom.EventManager.getInstance().addHandler(aElement, "keypress", function (s, e) {
+                        if (e.keyCode == 13) {
+                            messageBox.dismiss(MarvalSoftware.UI.MessageBox.Buttons.OK);
+                        }
+                    }, this);
+
+                    aElement.focus();
+                },
+
+                _issuesElement_click: function (sender, e) {
+                    if (e.target.className == "unlink") {
+                        this._unlinkIssue(e.target.dataset.issueNumber);
+                    }
+                },
+
+                _typeElement_change: function (sender, e) {
+                    this._createElement.disabled = !this._summaryElement.value.length > 0;
+                },
+
+                _createElement_click: function (sender, e) {
+                    this._createNewProject(this._summaryElement.value, this._typeElement.value, this._typeElement.options[this._typeElement.selectedIndex].parentNode.label);
+                    this._createElement.disabled = true;
+                    e.preventDefault();
+                },
+            });
+    })();
+
+</script>

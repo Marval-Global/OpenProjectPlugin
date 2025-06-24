@@ -1,0 +1,126 @@
+﻿<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.4;
+            background-color: white;
+            color: #333;
+        }
+        .project {
+            border: 1px solid #00509e;
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+        .project h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #003366;
+        }
+        .project-details, .task-details {
+            margin-bottom: 10px;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-list li {
+            background: #d1e0f2;
+            border: 1px solid #00509e;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .task-list li span {
+            display: block;
+        }
+        h1 {
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Project Summary</h1>
+
+<div id="projects">
+    <!-- <div class="project">
+    </div> -->
+</div>
+            
+<script>
+    const data = {
+        "projects": [
+            {
+                "id": 131,
+                "title": "ZZ2New Mobile Phone Request",
+                "description": "Receives an error code when logging on",
+                "status": "active",
+                "startdate": "2023-11-06",
+                "duedate": "",
+                "number": "SRV-93",
+                "completedate": "",
+                "clientcontact": {
+                    "firstname": "System",
+                    "lastname": "Administrator"
+                },
+                "tasks": [
+                    {
+                        "id": 3309,
+                        "name": "Initial Assessment & Planning",
+                        "startdate": "2023-11-06",
+                        "duedate": "2023-11-17",
+                        "completedate": ""
+                    },
+                    {
+                        "id": 3310,
+                        "name": "Document current server specifications and configurations",
+                        "startdate": "2023-11-06",
+                        "duedate": "2023-11-06",
+                        "completedate": ""
+                    },
+              
+                ],
+                "tags": []
+            }
+        ]
+    };
+
+    const projectsContainer = document.getElementById('projects');
+
+        const projectDiv = document.createElement('div');
+        projectDiv.classList.add('project');
+
+        projectDiv.innerHTML = `
+            <h2>@Model["title"] (@Model["number"] )</h2>
+            <div class="project-details">
+                <strong>Description:</strong> @Model["description"]<br>
+                <strong>Status:</strong> @Model["status"]<br>
+                <strong>Start Date:</strong> @Model["startdate"]<br>
+                <strong>Due Date:</strong> @Model["duedate"]<br>
+                <strong>Completion Date:</strong> @Model["completeddate"]<br>
+                <strong>Client Contact:</strong> @Model["firstname"]  @Model["lastname"]<br>
+            
+                <strong><a target="_blank" href='https://app.openproject.com/@Model["workspacename"]/?fuseaction=jobs&fusesubaction=jobdetails&Jobs_currentJobID=@Model["id"]'>Open project</a></strong>
+            </div>
+            <!--  <div class="task-details">
+                <h3>Tasks</h3>
+                <ul class="task-list">
+                   
+                </ul>
+            </div> -->
+        `;
+
+        projectsContainer.appendChild(projectDiv);
+   // });
+</script>
+
+
+
+</body></html>
