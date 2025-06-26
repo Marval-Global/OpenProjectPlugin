@@ -1,4 +1,4 @@
-﻿<script type="text/javascript" src="template.js"></script>
+<script type="text/javascript" src="template.js"></script>
 <template>
     <style>
         .content {
@@ -9,9 +9,9 @@
             border-radius: 30px;
         }
 
-        .MarvalSoftware-OpenProject {
+/*        .MarvalSoftware-OpenProject {
             display: none;
-        }
+        }*/
 
         .window .MarvalSoftware-OpenProject {
             display: block;
@@ -267,9 +267,10 @@
             max-width: 800px;
             margin: 20px auto;
         }
-        #createProject{
-            width:2000px;
-            cursor:pointer;
+
+        #createProject {
+            width: 2000px;
+            cursor: pointer;
         }
 
         #formattedResponse {
@@ -280,7 +281,9 @@
             line-height: 1.5;
         }
     </style>
-
+    <!--<select id="projectsDropdown"><option>Loading…</option> </select>
+    <br />
+    <button id="createProject">TAPTHISCREATEPROJECT</button>-->
     <div class="MarvalSoftware-OpenProject">
         <select id="projectsDropdown"><option>Loading…</option> </select>
         <br />
@@ -291,8 +294,8 @@
             <h1>@@LinkedProjectsTitle</h1>
             <a href="javascript:void(0);">@@Link</a>
         </div>
-        
-        
+
+
 
         <div class="issues">
         </div>
@@ -302,22 +305,22 @@
             <div class="issueTypes">
                 <div class="typeLoading">
                     <select id="ProjectTemplateSelection" class="IssueTypeSelect">
-                        <option selected disabled value="">@@IssueTypeSelector</option>
+                        <option></option>
                     </select>
                 </div>
             </div>
             <div class="issueSummaryWrapper">
                 <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
-            <button>@@Create</button>
-            <!-- <div class="issueOptions">
-            <a href="javascript:void(0);" class="selectAttachments"></a>
-            <input type="checkbox" disabled />
-            <label>@@MSMContactReporter</label>
-        </div> -->
+            <button id="createProjectTwo">@@Create</button>-->
+             <div class="issueOptions">
+                <a href="javascript:void(0);" class="selectAttachments"></a>
+                <input type="checkbox" disabled />
+                <label>@@MSMContactReporter</label>
+            </div>
         </div>
 
-    </div>
+    </div>-->
 </template>
 
 <template class="TestPluginTemplate">
@@ -805,33 +808,33 @@
                         console.error("Failed to create projects: ", error);
                     });
                 },
-                _loadProjectTemplates: function () {
-                    $.ajax({
-                        type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (result) {
-                            this._typeElement.style.backgroundImage = "";
-                            this._typeElement.style.display = 'block';
-                            var projectKeys = result.data.projects;
-                            $.each(projectKeys, function (index, template) {
+                //_loadProjectTemplates: function () {
+                //    $.ajax({
+                //        type: "GET",
+                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
+                //        contentType: "application/json; charset=utf-8",
+                //        dataType: "json",
+                //        success: function (result) {
+                //            this._typeElement.style.backgroundImage = "";
+                //            this._typeElement.style.display = 'block';
+                //            var projectKeys = result.data.projects;
+                //            $.each(projectKeys, function (index, template) {
 
 
-                                var option = document.createElement("option");
-                                option.text = template.title;
-                                option.id = template.id;
+                //                var option = document.createElement("option");
+                //                option.text = template.title;
+                //                option.id = template.id;
 
-                                $('.IssueTypeSelect').append(option);
+                //                $('.IssueTypeSelect').append(option);
 
-                            });
+                //            });
 
-                        }.bind(this),
-                        error: function () {
-                            this._errorPopup();
-                        }.bind(this)
-                    });
-                },
+                //        }.bind(this),
+                //        error: function () {
+                //            this._errorPopup();
+                //        }.bind(this)
+                //    });
+                //},
 
 
 
@@ -878,33 +881,7 @@
             console.error("Failed to fetch projects: ", error);
         });
     },
-                _loadProjectTemplates: function () {
-                    $.ajax({
-                        type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (result) {
-                            this._typeElement.style.backgroundImage = "";
-                            this._typeElement.style.display = 'block';
-                            var projectKeys = result.data.projects;
-                            $.each(projectKeys, function (index, template) {
-
-
-                                var option = document.createElement("option");
-                                option.text = template.title;
-                                option.id = template.id;
-
-                                $('.IssueTypeSelect').append(option);
-
-                            });
-
-                        }.bind(this),
-                        error: function () {
-                            this._errorPopup();
-                        }.bind(this)
-                    });
-                },
+                
 
                 _getContactUsername: function () {
                     if (this._contactEmail != null) {
@@ -926,6 +903,46 @@
                             }.bind(this)
                         });
                     }
+                }, _loadProjectTemplates: function () {
+                    
+                    console.log("openProject path: ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates");
+                    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        }
+                    }).then(response => {
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok: " + response.statusText);
+                        }
+                        return response.json()
+
+                    }).then(result => {
+                        console.log("Projects Response:", result);
+
+                        console.log("We should be appending now templates");
+
+                        const $dropdown = $("#ProjectTemplateSelection");
+                        console.log("Dropdown length:", $dropdown.length);
+                        $dropdown.empty();
+
+                        $dropdown.append($('<option>', {
+                            value: '',
+                            text: '-- Select a template --'
+                        }));
+
+                        result._embedded.elements.forEach(project => {
+                            $dropdown.append($('<option>', {
+                                value: project.id,
+                                text: project.name
+                            }));
+                        });
+
+
+
+                    }).catch(error => {
+                        console.error("Failed to fetch projects: ", error);
+                    });
                 },
                 _createNewProject: function (issueSummary, issueType, project) {
 
@@ -1023,7 +1040,7 @@
                             error: function (xhr, status, error) {
                                 that._clearIssues();
                                 that._renderProjects();
-                                this._createElement.disabled = false;
+                                //this._createElement.disabled = false;
                             }.bind(this)
                         });
                     }
@@ -1078,22 +1095,25 @@
                     this._typeLoadingElement = this._element.querySelector(".newIssue > .issueTypes > .typeLoading");
                     this._typeLoadingElement.style.backgroundImage = 'url("' + this._getPluginPath() + '/img/spinner.gif")';
                     this._summaryElement = this._element.querySelector(".issueSummaryWrapper > input");
-                    this._createElement = this._element.querySelector("button");
+                    //this._createElement = this._element.querySelector("button");
                     this._selectAttachmentElement = this._element.querySelector(".selectAttachments");
-                    // this._setSelectedAttachmentCount(0);
+                    this._setSelectedAttachmentCount(0);
                     this._contactCheckbox = this._element.querySelector(".issueOptions input");
                     this._issueOptionsElement = this._element.querySelector(".issueOptions");
 
                     this._sendMessageButton = this._element.querySelector("#createProject");
                     eventManager.addHandler(this._sendMessageButton, "click", this._createProject, this);
 
-                    //this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
-                    //this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
-                    //eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
-                    eventManager.addHandler(this._createElement, "click", this._createElement_click, this);
+                    this._sendMessageButtonTwo = this._element.querySelector("#createProjectTwo");
+                    eventManager.addHandler(this._sendMessageButtonTwo, "click", this._createProject, this);
+
+                    this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
+                    this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
+                    eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
+                    //eventManager.addHandler(this._createElement, "click", this._createElement_click, this);
                     eventManager.addHandler(this._summaryElement, "input", this._handleInput, this);
                     eventManager.addHandler(this._typeElement, "change", this._typeElement_change, this);
-                    this._typeElement.style.display = 'none';
+                    //this._typeElement.style.display = 'none';
                     this.appendChild(this._element);
                 },
                 _PingCheck: function () {
@@ -1115,7 +1135,7 @@
                     });
                 },
                 _handleInput: function () {
-                    this._summaryElement.value.length > 0 && this._typeElement.selectedIndex > 0 ? this._createElement.disabled = false : this._createElement.disabled = true;
+                    //this._summaryElement.value.length > 0 && this._typeElement.selectedIndex > 0 ? this._createElement.disabled = false : this._createElement.disabled = true;
                 },
 
                 _loadSummaryFromDescription: function () {
@@ -1172,30 +1192,30 @@
                     var selectNone = templateElement.querySelector(".selectNone");
                     eventManager.addHandler(selectAll, "click", this._selectAllAttachments, this);
                     eventManager.addHandler(selectNone, "click", this._deselectAllAttachments, this);
-                    // this._renderAttachments(this._attachmentsCheckboxList);
-                    // var attachmentPopup = MarvalSoftware.UI.MessageBox.show(
-                    //     this._getString("@@AttachmentPopUpTitle"),
-                    //     templateElement,
-                    //     MarvalSoftware.UI.MessageBox.INFORMATION,
-                    //     [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
-                    //     MarvalSoftware.UI.MessageBox.Buttons.OK,
-                    //     450,
-                    //     MarvalSoftware.createDelegate(function (sender, e) {
-                    //         if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
-                    //             for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
-                    //                 var checkbox = this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0];
-                    //                 var value = parseInt(checkbox.value, 10);
-                    //                 if (checkbox.checked && this._selectedAttachmentIds.indexOf(value) < 0) {
-                    //                     this._selectedAttachmentIds.push(value);
-                    //                 } else if (!checkbox.checked && this._selectedAttachmentIds.indexOf(value) > -1) {
-                    //                     var indexToRemove = this._selectedAttachmentIds.indexOf(value);
-                    //                     this._selectedAttachmentIds.splice(indexToRemove, 1);
-                    //                 }
-                    //             }
-                    //             this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
-                    //         }
-                    //     }, this)
-                    // );
+                    this._renderAttachments(this._attachmentsCheckboxList);
+                    var attachmentPopup = MarvalSoftware.UI.MessageBox.show(
+                    this._getString("@@AttachmentPopUpTitle"),
+                         templateElement,
+                         MarvalSoftware.UI.MessageBox.INFORMATION,
+                         [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
+                         MarvalSoftware.UI.MessageBox.Buttons.OK,
+                         450,
+                         MarvalSoftware.createDelegate(function (sender, e) {
+                             if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
+                                 for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
+                                     var checkbox = this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0];
+                                     var value = parseInt(checkbox.value, 10);
+                                     if (checkbox.checked && this._selectedAttachmentIds.indexOf(value) < 0) {
+                                         this._selectedAttachmentIds.push(value);
+                                     } else if (!checkbox.checked && this._selectedAttachmentIds.indexOf(value) > -1) {
+                                         var indexToRemove = this._selectedAttachmentIds.indexOf(value);
+                                         this._selectedAttachmentIds.splice(indexToRemove, 1);
+                                     }
+                                 }
+                                 this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
+                             }
+                         }, this)
+                     );
                 },
 
                 _selectAllAttachments: function () {
@@ -1377,14 +1397,14 @@
                 },
 
                 _typeElement_change: function (sender, e) {
-                    this._createElement.disabled = !this._summaryElement.value.length > 0;
+                    //this._createElement.disabled = !this._summaryElement.value.length > 0;
                 },
 
-                _createElement_click: function (sender, e) {
-                    this._createNewProject(this._summaryElement.value, this._typeElement.value, this._typeElement.options[this._typeElement.selectedIndex].parentNode.label);
-                    this._createElement.disabled = true;
-                    e.preventDefault();
-                },
+                //_createElement_click: function (sender, e) {
+                //    this._createNewProject(this._summaryElement.value, this._typeElement.value, this._typeElement.options[this._typeElement.selectedIndex].parentNode.label);
+                //    //this._createElement.disabled = true;
+                //    e.preventDefault();
+                //},
             });
     })();
 
