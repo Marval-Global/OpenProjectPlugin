@@ -268,10 +268,10 @@
             margin: 20px auto;
         }
 
-        #createProject {
+/*        #createProject {
             width: 2000px;
             cursor: pointer;
-        }
+        }*/
 
         #formattedResponse {
             white-space: pre-wrap;
@@ -287,7 +287,7 @@
     <div class="MarvalSoftware-OpenProject">
         <select id="projectsDropdown"><option>Loading…</option> </select>
         <br />
-        <button id="createProject">TAPTHISCREATEPROJECT</button>
+        <!--<button id="createProject">TAPTHISCREATEPROJECT</button>-->
         <br />
         <br />
         <div class="header">
@@ -312,7 +312,7 @@
             <div class="issueSummaryWrapper">
                 <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
-            <button id="createProjectTwo">@@Create</button>-->
+            <button id="createProjectTwo"></button>-->
              <div class="issueOptions">
                 <a href="javascript:void(0);" class="selectAttachments"></a>
                 <input type="checkbox" disabled />
@@ -662,6 +662,8 @@
                         if (currentUrl.includes("Request.aspx")) {
                             //printAllProjects();
                             this._requestNumber = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getRequestNumber();
+                            let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                            console.log("request number is: ", reqId);
                             this._contactEmail = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getContactPreferredEmail();
                             this._requestDescription = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getDescription();
                             this._attachments = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getAttachments();
@@ -782,17 +784,37 @@
                         }.bind(this)
                     });
                 },
-                _createProject: function () {
-                    const newProject = {
-                        name: "test"
-                    };
-                    console.log("we are now creating a project ", newProject);
+                _createProject: function (sender, e) {
+                    let selectedIndex = $("#ProjectTemplateSelection")[0].selectedIndex;
+                    let payload = {};
+                    let selectedID = $("#ProjectTemplateSelection").val();
+                    console.log("selected id is: ", selectedID);
+                    let inputtext = $("#projectDescription").val();
+                    if (selectedIndex > 0) {
+                        console.log("user selected", $("#ProjectTemplateSelection").val());
+                        payload = {
+                            name: inputtext,
+                            copy: true,
+                            id: selectedID
+                        }
+                    } else {
+                        payload = {
+                            name: inputtext,
+                            copy: false,
+                            id: selectedID
+                        }
+                    }
+                    
+                    console.log("input text is: ", inputtext);
+                    e.preventDefault();
+                    
+                    console.log("we are now creating a project ", payload);
                     fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json; charset=utf-8"
                         },
-                        body:JSON.stringify(newProject)
+                        body:JSON.stringify(payload)
                     }).then(response => {
                         if (!response.ok) {
                             throw new Error("Network response was not ok: " + response.statusText);
@@ -840,8 +862,10 @@
 
                 _printAllProjects: function() {
             console.log("we are printing all projects");
-            console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects");
-            fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects", {
+                    
+                    let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId);
+            fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
@@ -1101,8 +1125,8 @@
                     this._contactCheckbox = this._element.querySelector(".issueOptions input");
                     this._issueOptionsElement = this._element.querySelector(".issueOptions");
 
-                    this._sendMessageButton = this._element.querySelector("#createProject");
-                    eventManager.addHandler(this._sendMessageButton, "click", this._createProject, this);
+                    //this._sendMessageButton = this._element.querySelector("#createProject");
+                    //eventManager.addHandler(this._sendMessageButton, "click", this._createProject, this);
 
                     this._sendMessageButtonTwo = this._element.querySelector("#createProjectTwo");
                     eventManager.addHandler(this._sendMessageButtonTwo, "click", this._createProject, this);
