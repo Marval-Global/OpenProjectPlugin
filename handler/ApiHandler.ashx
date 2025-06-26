@@ -1,4 +1,4 @@
-﻿<%@ WebHandler Language = "C#" Class="ApiHandler" %>
+<%@ WebHandler Language = "C#" Class="ApiHandler" %>
 
 using System;
 using System.IO;
@@ -292,6 +292,11 @@ public class ApiHandler : PluginHandler
     {
         HttpWebRequest httpWebRequest;
 
+        string apiKey = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
+        string encodedAuth = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey));
+
+        string reqid = context.Request.QueryString["reqId"];
+
         Log.Information("Action is " + action);
         switch (action)
         {
@@ -300,9 +305,9 @@ public class ApiHandler : PluginHandler
                 break;
             case "getAllProjects":
                 Log.Information("we are here");
-                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects");
-                string apiKey = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
-                string encodedAuth = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey));
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\""+reqid+"\"]}}]");
+                Log.Information("the appended endpoint is" + "http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\"" + reqid + "\"]}}]");
+
                 Log.Information("encodedd auth is " + encodedAuth);
 
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
@@ -313,10 +318,21 @@ public class ApiHandler : PluginHandler
                 context.Response.Write(responseContent);
 
                 break;
+            case "getOpenProjectTemplates":
+                Log.Information("We should be getting all OP templates now");
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\"user_action\":{\"operator\":\"=\",\"values\":[\"projects/copy\"]}},{\"templated\":{\"operator\":\"=\",\"values\":[\"t\"]}}]");
+                httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
+                var responseContent2 = this.ProcessRequest2(httpWebRequest);
+                Log.Information("from getOpenProjectTemplates response content is, ", responseContent2);
+                context.Response.Write(responseContent2); //should use other var name
+
+                break;
             case "createProject":
                 Log.Information("We are creating a project now");
                 //httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects", payloadJson, "POST");
                 string requestBody;
+                string curUrl;
+
                 using(var reader = new StreamReader(context.Request.InputStream))
                 {
                     requestBody = reader.ReadToEnd();
@@ -328,17 +344,28 @@ public class ApiHandler : PluginHandler
                 //httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
                 //httpWebRequest.ContentType = "application/json";
 
+                dynamic parsedBody = JsonConvert.DeserializeObject(requestBody);
+
                 var myPayload = new
                 {
-                    name = "testFromMarval"
+                    name = parsedBody.name
                 };
                 string payloadJson = JsonConvert.SerializeObject(myPayload);
                 // Information.log(payloadJson);
-
-                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects", payloadJson, "POST");
+                if (parsedBody.copy == true)
+                {
+                    curUrl = "http://localhost:8080/api/v3/projects/" + parsedBody.id + "/copy";
+                }
+                else
+                {
+                    curUrl = "http://localhost:8080/api/v3/projects";
+                }
+                Log.Information("the cur url of it is: " + curUrl);
+                httpWebRequest = ApiHandler.BuildRequest(curUrl, payloadJson, "POST");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
                 httpWebRequest.ContentType = "application/json";
-                context.Response.Write(this.ProcessRequest2(httpWebRequest));
+                string ex = this.ProcessRequest2(httpWebRequest);
+                context.Response.Write("{}");
 
 
                 break;
