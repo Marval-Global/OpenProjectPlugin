@@ -196,7 +196,7 @@ public class ApiHandler : PluginHandler
         }
     }
 
-
+    private string resContent;
 
 
     private string JIRAFieldType { get; set; }
@@ -297,13 +297,26 @@ public class ApiHandler : PluginHandler
 
         string reqid = context.Request.QueryString["reqId"];
 
+
         Log.Information("Action is " + action);
         switch (action)
         {
             case "PreRequisiteCheck":
                 context.Response.Write(this.PreRequisiteCheck());
                 break;
-            case "getAllProjects":
+            case "getAllWorkPackages":
+                Log.Information("getworkpck is: " + "http://localhost:8080/api/v3/projects/" + reqid + "/work_packages");
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects/"+reqid+"/work_packages");
+
+                httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
+                var responseContent3 = this.ProcessRequest2(httpWebRequest);
+                Log.Information("response of workpackages " + responseContent3);
+
+
+                context.Response.Write(responseContent3);
+
+                break;
+            case "getAllProjects": //this actually gets all projects linked to the request id passed
                 Log.Information("we are here");
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\""+reqid+"\"]}}]");
                 Log.Information("the appended endpoint is" + "http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\"" + reqid + "\"]}}]");
