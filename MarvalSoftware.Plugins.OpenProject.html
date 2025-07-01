@@ -710,12 +710,21 @@
                 },
                 _renderProject: function (project) {
 
-                    
-
-                    openProject._getAllWorkPackages(97).then(result => {
+                    //let id = this._printAllProjects(); //gets id of current project
+                    //var idTwo;
+                    //openProject._getAllWorkPackages(id).then(result => {
+                    //    if (result) {
+                    //        console.log("Work package count:", result.count);
+                    //        idTwo = result.count;
+                    //    }
+                    //});
+                    console.log("current id of this project in render projects is: ", project.id);
+                    openProject._getAllWorkPackages(project.id).then(result => {
                         var issueTemplate = document.querySelector(".issueTemplate").content;
                         var issueElement = window.top.document.importNode(issueTemplate, true);
                         var issueTemplateDiv = issueElement.querySelector(".issue");
+
+
 
                         // var contentSel =  window.top.document.querySelector(".content");
                         // window.top.document.querySelector('.content').classList.add('contentMarvalProjects');
@@ -736,7 +745,7 @@
                         // numberElement.href = project.title;
                         var count = 0;
                         var countuncompleted = 0;
-                        //$.each(project.tasks, function (index, task) {
+                        //$.each(project.tasks, function (index, task) {   
 
                         //    if (task.completedate === "") {
                         //        count++; // Increment count if completedate is empty
@@ -750,6 +759,7 @@
                         issueElement.querySelector(".status").textContent = project._links.status.title;
                         issueElement.querySelector(".summary").textContent = project.description.raw;
                         issueElement.querySelector(".tasks").textContent = result.count;
+                        issueElement.querySelector(".unlink").addEventListener('click', function () {openProject._unlinkProject(project.id)}, false);
                         //var itemsTotal = project.itemsActive + project.itemsCompleted;
                         let id = project.id;
                         console.log("getall work packages", this._getAllWorkPackages(id));
@@ -800,32 +810,109 @@
                     }
                 },
 
-                //_getAllWorkPackages: function (id) {
-                //    const url = openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllWorkPackages&reqId=" + id;
-                //    console.log("so we are here", url);
+                _unlinkProject: async function (id) {
+                    try {
+                        //link will be a booleon
 
-                //    // ✅ Return the Promise so the caller can await or chain `.then()`
-                //    return fetch(url, {
-                //        method: "GET",
-                //        headers: {
-                //            "Content-Type": "application/json; charset=utf-8"
-                //        }
-                //    })
-                //        .then(response => {
-                //            if (!response.ok) {
-                //                throw new Error("Network response was not ok: " + response.statusText);
-                //            }
-                //            return response.json();  
-                //        })
-                //        .then(result => {
-                //            console.log("Resolved result:", result);
-                //            return result;  
-                //        })
-                //        .catch(error => {
-                //            console.error("Failed to fetch work packages:", error);
-                //            throw error; 
-                //        });
+
+                        const response = await fetch(
+                            openProject._getPluginPath() + "handler/ApiHandler.ashx?action=unlinkProject&id=" + id,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json; charset=utf-8"
+                                }
+                            }
+                        );
+
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok: " + response.statusText);
+                        }
+
+                        const result = await response.json();
+                        this._renderProjects();
+                        return result;
+
+                    } catch (error) {
+                        console.error("Failed to fetch unlink project: ", error);
+                        return null;
+                    }
+                },
+                _linkNewProject: async function (projectId, reqId) {
+                    try {
+                        //link will be a booleon
+
+                        const response = await fetch(
+                            openProject._getPluginPath() + "handler/ApiHandler.ashx?action=unlinkProject&id=" + projectId + "&reqId=" + reqId,
+                            {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json; charset=utf-8"
+                                }
+                            }
+                        );
+
+                        if (!response.ok) {
+                            throw new Error("Network response was not ok: " + response.statusText);
+                        }
+
+                        const result = await response.json();
+                        this._renderProjects();
+                        console.log("link new project should have worked!");
+                        return result;
+
+                    } catch (error) {
+                        console.error("Failed to fetch unlink(we are linking it) project: ", error);
+                        return null;
+                    }
+                },
+                _getProjectWithIdentifier: async function (identifier) {
+                    try {
+                        const url = this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + encodeURIComponent(identifier);
+                        console.log("so we are here in render projects", url);
+
+                        const response = await fetch(url, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        console.log("result is from identifier", result);
+
+                        this._renderProjects();
+
+                        return result;
+                    } catch (error) {
+                        console.error("Failed to get projects:", error);
+                        this._errorPopup();
+                        // Optionally re-throw if you want callers to catch the error
+                        // throw error;
+                    }
+                },
+
+                //_getProjectWithIdentifier: function (identifier) {
+                //    console.log("so we are here in render projects ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + identifier);
+                //    this._renderIssuesRequest = $.ajax({
+                //        type: "GET",
+                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + identifier,
+                //        contentType: "application/json; charset=utf-8",
+                //        dataType: "json",
+                //        success: function (result) {
+                //            console.log("result isfrom identifier ", result);
+
+                //        }.bind(this),
+                //        error: function () {
+                //            this._errorPopup();
+                //        }.bind(this)
+                //    });
                 //},
+                
 
 
                 _renderProjects: function () {
@@ -840,12 +927,13 @@
                     
 
                     var globalRes;
-                    openProject._getAllWorkPackages(97).then(result => {
-                        if (result) {
-                            console.log("Work package count:", result.count);
-                            globalRes = result.count;
-                        }
-                    });
+                    //let id = this._printAllProjects();
+                    //openProject._getAllWorkPackages(id).then(result => {
+                    //    if (result) {
+                    //        console.log("Work package count:", result.count);
+                    //        globalRes = result.count;
+                    //    }
+                    //});
                     
 
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
@@ -931,7 +1019,32 @@
                     }).catch(error => {
                         console.error("Failed to create projects: ", error);
                     });
+                }, _printAllProjects: function () {
+                    const reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    const url = openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId;
+
+                    return fetch(url, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok: " + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(result => {
+                            // Extract and return just the IDs
+                            return result._embedded.elements.map(project => project.id);
+                        })
+                        .catch(error => {
+                            console.error("Failed to fetch project IDs:", error);
+                            return []; // Return empty array on failure
+                        });
                 },
+
                 //_loadProjectTemplates: function () {
                 //    $.ajax({
                 //        type: "GET",
@@ -962,51 +1075,7 @@
 
 
 
-    //            _printAllProjects: function() {
-    //        console.log("we are printing all projects");
-                    
-    //                let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-    //                console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId);
-    //        fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId, {
-    //        method: "GET",
-    //        headers: {
-    //            "Content-Type": "application/json; charset=utf-8"
-    //        }
-    //    }).then(response => {
-    //        if (!response.ok) {
-    //            throw new Error("Network response was not ok: " + response.statusText);
-    //        }
-    //        return response.json()
-
-    //    }).then(result => {
-    //        console.log("Projects Response:", result);
-
-    //        console.log("We should be appending now");
-
-
-
-    //        const $dropdown = $("#projectsDropdown");
-    //        console.log("Dropdown length:", $dropdown.length);
-    //        $dropdown.empty();
-
-    //        $dropdown.append($('<option>', {
-    //            value: '',
-    //            text: '-- Select a project --'
-    //        }));
-
-    //        result._embedded.elements.forEach(project => {
-    //            $dropdown.append($('<option>', {
-    //                value: project.id,
-    //                text: project.name
-    //            }));
-    //        });
-
-
-
-    //    }).catch(error => {
-    //        console.error("Failed to fetch projects: ", error);
-    //    });
-    //},
+    //           
                 
 
                 _getContactUsername: function () {
@@ -1176,22 +1245,22 @@
                         this._issuesElement.removeChild(this._issuesElement.firstChild);
                     }
                 },
-                _unlinkIssue: function (issueNumber) {
-                    this._issuesElement.removeChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
-                    var that = this;
-                    $.ajax({
-                        type: "DELETE",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=UnlinkMarvalProjectsIssue&requestNumber=" + this._requestNumber + "&" + "issueNumber=" + issueNumber,
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "text",
-                        success: function () {
-                            that._renderProjects();
-                        }.bind(this),
-                        error: function (error) {
-                            this._issuesElement.addChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
-                        }.bind(this)
-                    });
-                },
+                //_unlinkIssue: function (issueNumber) {
+                //    this._issuesElement.removeChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
+                //    var that = this;
+                //    $.ajax({
+                //        type: "DELETE",
+                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=UnlinkMarvalProjectsIssue&requestNumber=" + this._requestNumber + "&" + "issueNumber=" + issueNumber,
+                //        contentType: "application/json; charset=utf-8",
+                //        dataType: "text",
+                //        success: function () {
+                //            that._renderProjects();
+                //        }.bind(this),
+                //        error: function (error) {
+                //            this._issuesElement.addChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
+                //        }.bind(this)
+                //    });
+                //},
 
                 _linkIssue: function (issueNumber) {
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
@@ -1488,18 +1557,43 @@
 
                 },
 
-                _linkElement_click: function () {
-                    var divElement = window.top.document.createElement("DIV");
-                    divElement.innerHTML = this._getString("@@EnterOpenProjectIssueNumber");
-                    var aElement = divElement.getElementsByTagName("INPUT")[0];
+                _linkElement_click: function () { //when we click link
+                    var wrapperDiv = window.top.document.createElement("DIV");
+
+                    wrapperDiv.innerHTML = `
+        <div>
+            <label>${this._getString("@@EnterOpenProjectIssueNumber")}</label>
+            <input type="text" id="projectIdentifierInput" />
+            <table id="projectResultsTable" border="1" style="margin-top: 10px; width: 100%;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">(Empty)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+    /*var divElement = window.top.document.createElement("DIV");
+divElement.innerHTML = this._getString("@@EnterProWorkflowIssueNumber");
+var aElement = divElement.getElementsByTagName("INPUT")[0];*/ 
+
+                    var aElement = wrapperDiv.querySelector("#projectIdentifierInput");
+                   // aElement = this._getString("@@EnterOpenProjectIssueNumber");
+                    //openProject._getProjectWithIdentifier("hello");
 
                     var messageBox = MarvalSoftware.UI.MessageBox.show(
                         this._getString("@@LinkOpenProjectIssueTitle"),
-                        divElement,
+                        wrapperDiv,
                         MarvalSoftware.UI.MessageBox.Types.INFORMATION,
                         [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
                         MarvalSoftware.UI.MessageBox.Buttons.OK,
-                        400,
+                        800,
                         MarvalSoftware.createDelegate(function (sender, e) {
                             if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
                                 this._linkIssue(aElement.value);
@@ -1514,11 +1608,49 @@
                     }, this);
 
                     aElement.focus();
+                    openProject._getProjectWithIdentifier("hello").then(result => {
+                        const projects = result._embedded?.elements || [];
+                        const tbody = wrapperDiv.querySelector("#projectResultsTable tbody");
+
+                        // Clear existing rows
+                        tbody.innerHTML = "";
+
+                        if (projects.length === 0) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
+                            tbody.appendChild(row);
+                        } else {
+                            projects.forEach(project => {
+                                const row = document.createElement("tr");
+                                row.innerHTML = `
+                    <td>${project.id}</td>
+                    <td>${project.name}</td>
+                    <td>
+                    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}">link</button>
+                    </td>
+                `;
+                                tbody.appendChild(row);
+                            });
+                        }
+                    }).catch(error => {
+                        console.error("❌ Failed to fetch project data:", error);
+                    });
+                    let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                    wrapperDiv.addEventListener("click", function (event) {
+                        if (event.target.classList.contains("linkProjectButton")) {
+                            const projectId = event.target.getAttribute("data-id");
+                            const projectName = event.target.getAttribute("data-name");
+                            console.log(`🔗 Linking project ID: ${projectId}, Name: ${projectName}`);
+
+                            openProject._linkNewProject(projectId, reqId);
+                        }
+                    });
+
                 },
 
                 _issuesElement_click: function (sender, e) {
                     if (e.target.className == "unlink") {
-                        this._unlinkIssue(e.target.dataset.issueNumber);
+                        //this._unlinkIssue(e.target.dataset.issueNumber);
                     }
                 },
 
