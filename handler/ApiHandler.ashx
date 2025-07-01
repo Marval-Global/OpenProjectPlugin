@@ -296,6 +296,8 @@ public class ApiHandler : PluginHandler
         string encodedAuth = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey));
 
         string reqid = context.Request.QueryString["reqId"];
+        string projectId = "";
+        string filter = "";
 
 
         Log.Information("Action is " + action);
@@ -316,10 +318,48 @@ public class ApiHandler : PluginHandler
                 context.Response.Write(responseContent3);
 
                 break;
-            case "getAllProjects": //this actually gets all projects linked to the request id passed
+            case "unlinkProject":
+                string cInput = "0"; //cannot be blank, need to set it as something
+                if (!string.IsNullOrEmpty(context.Request.QueryString["reqId"]))
+                {//meaning that we are linking
+                    cInput = context.Request.QueryString["reqId"];
+                }
+                Log.Information("We are creating a project now");
+
+                string apiKey3 = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
+                string encodedAuth3 = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey3));
+
+                    //so if we are linking, attribute = req id, if unlinking we are settting attribute to be blank!
+                var myPayload3 = new
+                {
+                    customField1 = cInput
+                };
+                string payloadJson3 = JsonConvert.SerializeObject(myPayload3);
+                projectId = context.Request.QueryString["id"];
+
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects/" + projectId, payloadJson3, "PATCH");
+                httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth3;
+                httpWebRequest.ContentType = "application/json";
+                string ex3 = this.ProcessRequest2(httpWebRequest);
+                context.Response.Write("{}");
+
+
+                break;
+            case "getAllProjects": //this actually gets all projects linked to the request id passed, can use this to get id
                 Log.Information("we are here");
-                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\""+reqid+"\"]}}]");
-                Log.Information("the appended endpoint is" + "http://localhost:8080/api/v3/projects?filters=[{\"customField1\":{\"operator\":\"=\",\"values\":[\"" + reqid + "\"]}}]");
+                string identifier = "";
+                if (!string.IsNullOrEmpty(context.Request.QueryString["identifier"]))//we have an identifier so we want to filter with identifier
+                {
+                    filter = "name_and_identifier";
+                    identifier = context.Request.QueryString["identifier"];
+                }
+                else
+                {
+                    filter = "customField1";
+                    identifier = context.Request.QueryString["reqId"];
+                }
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
+                Log.Information("the appended endpoint is" + "http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
 
                 Log.Information("encodedd auth is " + encodedAuth);
 
