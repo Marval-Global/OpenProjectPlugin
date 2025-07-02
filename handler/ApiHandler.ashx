@@ -299,21 +299,16 @@ public class ApiHandler : PluginHandler
         string projectId = "";
         string filter = "";
 
-
-        Log.Information("Action is " + action);
         switch (action)
         {
             case "PreRequisiteCheck":
                 context.Response.Write(this.PreRequisiteCheck());
                 break;
             case "getAllWorkPackages":
-                Log.Information("getworkpck is: " + "http://localhost:8080/api/v3/projects/" + reqid + "/work_packages");
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects/"+reqid+"/work_packages");
 
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
                 var responseContent3 = this.ProcessRequest2(httpWebRequest);
-                Log.Information("response of workpackages " + responseContent3);
-
 
                 context.Response.Write(responseContent3);
 
@@ -324,7 +319,6 @@ public class ApiHandler : PluginHandler
                 {//meaning that we are linking
                     cInput = context.Request.QueryString["reqId"];
                 }
-                Log.Information("We are creating a project now");
 
                 string apiKey3 = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
                 string encodedAuth3 = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey3));
@@ -346,7 +340,6 @@ public class ApiHandler : PluginHandler
 
                 break;
             case "getAllProjects": //this actually gets all projects linked to the request id passed, can use this to get id
-                Log.Information("we are here");
                 string identifier = "";
                 if (!string.IsNullOrEmpty(context.Request.QueryString["identifier"]))//we have an identifier so we want to filter with identifier
                 {
@@ -359,30 +352,20 @@ public class ApiHandler : PluginHandler
                     identifier = context.Request.QueryString["reqId"];
                 }
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
-                Log.Information("the appended endpoint is" + "http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
-
-                Log.Information("encodedd auth is " + encodedAuth);
 
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
                 var responseContent = this.ProcessRequest2(httpWebRequest);
-                Log.Information("in get all projects, response content is: " + responseContent);
-
-
                 context.Response.Write(responseContent);
 
                 break;
             case "getOpenProjectTemplates":
-                Log.Information("We should be getting all OP templates now");
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\"user_action\":{\"operator\":\"=\",\"values\":[\"projects/copy\"]}},{\"templated\":{\"operator\":\"=\",\"values\":[\"t\"]}}]");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
                 var responseContent2 = this.ProcessRequest2(httpWebRequest);
-                Log.Information("from getOpenProjectTemplates response content is, ", responseContent2);
                 context.Response.Write(responseContent2); //should use other var name
 
                 break;
             case "createProject":
-                Log.Information("We are creating a project now");
-                //httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects", payloadJson, "POST");
                 string requestBody;
                 string curUrl;
 
@@ -390,12 +373,9 @@ public class ApiHandler : PluginHandler
                 {
                     requestBody = reader.ReadToEnd();
                 }
-                Log.Information("We have got the body of " + requestBody);
 
                 string apiKey2 = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
                 string encodedAuth2 = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey2));
-                //httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
-                //httpWebRequest.ContentType = "application/json";
 
                 dynamic parsedBody = JsonConvert.DeserializeObject(requestBody);
 
@@ -404,7 +384,6 @@ public class ApiHandler : PluginHandler
                     name = parsedBody.name
                 };
                 string payloadJson = JsonConvert.SerializeObject(myPayload);
-                // Information.log(payloadJson);
                 if (parsedBody.copy == true)
                 {
                     curUrl = "http://localhost:8080/api/v3/projects/" + parsedBody.id + "/copy";
@@ -413,7 +392,6 @@ public class ApiHandler : PluginHandler
                 {
                     curUrl = "http://localhost:8080/api/v3/projects";
                 }
-                Log.Information("the cur url of it is: " + curUrl);
                 httpWebRequest = ApiHandler.BuildRequest(curUrl, payloadJson, "POST");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
                 httpWebRequest.ContentType = "application/json";
@@ -514,15 +492,6 @@ public class ApiHandler : PluginHandler
                     context.Response.Write(attachmentResult);
                 }
                 break;
-                //case "ViewSummary":
-                //    var queryString = "{ projects(input: {where: {id: {EQ: " + this.IssueUrl + "}}}) { id title description status startdate duedate number completedate clientcontact { firstname lastname } tasks { id name startdate duedate completedate } tags { id name } }}";
-                //    dynamic jobject = JObject.FromObject(new
-                //    {
-                //        query = queryString
-                //    });
-                //    httpWebRequest = ApiHandler.BuildRequest(this.GraphApiBaseUrl, jobject.ToString(), "POST");
-                //    context.Response.Write(this.BuildPreview(context, ApiHandler.ProcessRequest(httpWebRequest, this.openprojectapikey)));
-                //    break;
         }
     }
     private string GetOUType(int OUid)
@@ -564,8 +533,6 @@ public class ApiHandler : PluginHandler
                 return reader.ReadToEnd();
             }
 
-            //return myRes;
-
         }
         catch (WebException webEx)
         {
@@ -589,7 +556,6 @@ public class ApiHandler : PluginHandler
 
             return null;
 
-
         }
     }
     private string ConvertArrayToString(int[] numbers)
@@ -609,42 +575,6 @@ public class ApiHandler : PluginHandler
         var httpWebRequest = ApiHandler.BuildRequest(openProjectIntegrationAddress, jsonData, "POST");
         var response = ApiHandler.ProcessRequest(httpWebRequest, this.openprojectapikey);
         return response;
-
-        //   dynamic OpenProjectProject = JObject.FromObject(new
-        // {
-        //     requestid = 91,
-        //     number = "SRV-91",
-        //     title = "A new project",
-        //     priority = "3",
-        //     startdate = "01/01/0001 00:00:00",
-        //     duedate = "01/01/0001 00:00:00",
-        //     categoryid = 5,
-        //     servicename = "Hardware",
-        //     customer = new
-        //     {
-        //         id = 1,
-        //         name = "Marval Software Ltd."
-        //     },
-        //       customercontact = new
-        //     {
-        //         id = 2,
-        //         name = "Administrator, System",
-        //          email = "support@marval.com.au"
-        //     },
-        //       tracker = new
-        //     {
-        //         id = 2,
-        //         name = "Administrator, System",
-        //         type = "Person"
-        //     },
-        //       assignee = new
-        //     {
-        //         id = 2,
-        //         type = "Person",
-        //         name = "Administrator, System"
-        //     }
-        // });
-
 
     }
     private string GetOpenProjectProjects()
@@ -680,8 +610,6 @@ public class ApiHandler : PluginHandler
         return response;
 
     }
-
-
     private string LoadSummaryTemplate(HttpContext context)
     {
         return File.ReadAllText(context.Server.MapPath(string.Format("{0}/MarvalSoftware.Plugins.OpenProject.Summary.html", this.PluginRelativeBaseUrl)));
@@ -765,9 +693,7 @@ public class ApiHandler : PluginHandler
         }
 
         return issueDetails;
-    }
-
-
+    }                                 
 
     private string GetRequestBaseTypeIconUrl(int requestBaseType)
     {
@@ -778,12 +704,11 @@ public class ApiHandler : PluginHandler
             icon = "change";
         }
         return string.Format("{0}{1}/Assets/Skins/{2}/Icons/{3}_32.png", HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority), MarvalSoftware.UI.WebUI.ServiceDesk.WebHelper.ApplicationPath, MarvalSoftware.UI.WebUI.Style.StyleSheetManager.Skin, icon);
-    }
-
+    } 
 
     /// <summary>
     /// Gets attachment DTOs from array of attachment Ids
-    /// </summary>
+    /// </summary>   
     /// <param name="attachmentIds"></param>
     /// <returns>A list of attachment DTOs</returns>
     public List<AttachmentViewInfo> GetAttachmentDtOs(int[] attachmentIds)
