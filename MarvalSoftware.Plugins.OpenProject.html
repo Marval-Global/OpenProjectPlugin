@@ -9,10 +9,6 @@
             border-radius: 30px;
         }
 
-/*        .MarvalSoftware-OpenProject {
-            display: none;
-        }*/
-
         .window .MarvalSoftware-OpenProject {
             display: block;
         }
@@ -268,11 +264,6 @@
             margin: 20px auto;
         }
 
-/*        #createProject {
-            width: 2000px;
-            cursor: pointer;
-        }*/
-
         #formattedResponse {
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -281,21 +272,14 @@
             line-height: 1.5;
         }
     </style>
-    <!--<select id="projectsDropdown"><option>Loading…</option> </select>
-    <br />
-    <button id="createProject">TAPTHISCREATEPROJECT</button>-->
     <div class="MarvalSoftware-OpenProject">
-        <!--<select id="projectsDropdown"><option>Loading…</option> </select>-->
         <br />
-        <!--<button id="createProject">TAPTHISCREATEPROJECT</button>-->
         <br />
         <br />
         <div class="header">
             <h1>@@LinkedProjectsTitle</h1>
             <a href="javascript:void(0);">@@Link</a>
         </div>
-
-
 
         <div class="issues">
         </div>
@@ -313,11 +297,6 @@
                 <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
             <button id="createProjectTwo"></button>-->
-             <div class="issueOptions">
-                <a href="javascript:void(0);" class="selectAttachments"></a>
-                <input type="checkbox" disabled />
-                <label>@@MSMContactReporter</label>
-            </div>
         </div>
 
     </div>-->
@@ -427,7 +406,6 @@
 
                 init: function () {
                     openProject = this;
-                    console.log("In config item");
                     setTimeout(() => {
                         var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
                         var currentUrl = window.top.location.href;
@@ -438,11 +416,7 @@
                             keyelement2.style.display = 'none';
                         }
                     }, 1000);
-                    const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
-
-                    
-
-
+                    const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");             
 
                     $(keyelement2).val("test");
                     //
@@ -479,53 +453,7 @@
                         div.appendChild(descriptionInput);
                         div.appendChild(removeButton);
                         container.appendChild(div);
-                    }
-
-                    //function printAllProjects() {
-                    //    console.log("we are printing all projects");
-                    //    console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects" );
-                    //    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects", {
-                    //        method: "GET",
-                    //        headers: {
-                    //            "Content-Type": "application/json; charset=utf-8"
-                    //        }
-                    //                }).then(response => {
-                    //                    if (!response.ok) {
-                    //                        throw new Error("Network response was not ok: " + response.statusText);
-                    //                    }
-                    //                    return response.json()
-                        
-                    //}).then(result => {
-                    //    console.log("Projects Response:", result);
-
-                    //    console.log("We should be appending now");
-                        
-
-
-                    //    const $dropdown = $("#projectsDropdown");
-                    //    console.log("Dropdown length:", $dropdown.length);
-                    //    $dropdown.empty();
-
-                    //    $dropdown.append($('<option>', {
-                    //        value: '',
-                    //        text: '-- Select a project --'
-                    //    }));
-
-                    //    result._embedded.elements.forEach(project => {
-                    //        $dropdown.append($('<option>', {
-                    //            value: project.id,
-                    //            text: project.name
-                    //        }));
-                    //    });
-
-
-
-                    //}).catch(error => {
-                    //    console.error("Failed to fetch projects: ",error);
-                    //});
-                    //}
-
-                    //printAllProjects();
+                    }                         
 
                     function saveItems() {
                         const container = window.top.document.getElementById("itemsContainer");
@@ -569,7 +497,6 @@
                     // Append the style element to the head section of your document
                     $('head').append(style);
                     $(document).ready(function() {
-                       // printAllProjects();
                     });
 
                     var currentUrl = window.top.location.href;
@@ -664,19 +591,15 @@
                     } else {
                         var currentUrl = window.top.location.href;
                         if (currentUrl.includes("Request.aspx")) {
-                            //printAllProjects();
                             this._requestNumber = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getRequestNumber();
                             let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                            console.log("request number is: ", reqId);
+                            //console.log("request number is: ", reqId);
                             this._contactEmail = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getContactPreferredEmail();
                             this._requestDescription = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getDescription();
                             this._attachments = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getAttachments();
-                            //document.getElementById("createProject").onclick = openProject._createProject();
                         } else {
 
                         }
-
-
 
                         this._selectedAttachmentIds = [];
                         if (this._requestNumber) {
@@ -709,23 +632,11 @@
                     return content;
                 },
                 _renderProject: function (project) {
-
-                    //let id = this._printAllProjects(); //gets id of current project
-                    //var idTwo;
-                    //openProject._getAllWorkPackages(id).then(result => {
-                    //    if (result) {
-                    //        console.log("Work package count:", result.count);
-                    //        idTwo = result.count;
-                    //    }
-                    //});
-                    console.log("current id of this project in render projects is: ", project.id);
                     openProject._getAllWorkPackages(project.id).then(result => {
                         var issueTemplate = document.querySelector(".issueTemplate").content;
                         var issueElement = window.top.document.importNode(issueTemplate, true);
                         var issueTemplateDiv = issueElement.querySelector(".issue");
-
-
-
+                       
                         // var contentSel =  window.top.document.querySelector(".content");
                         // window.top.document.querySelector('.content').classList.add('contentMarvalProjects');
 
@@ -759,33 +670,24 @@
                         issueElement.querySelector(".status").textContent = project._links.status.title;
                         issueElement.querySelector(".summary").textContent = project.description.raw;
                         issueElement.querySelector(".tasks").textContent = result.count;
-                        issueElement.querySelector(".unlink").addEventListener('click', function () {openProject._unlinkProject(project.id)}, false);
+                        let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+                        issueElement.querySelector(".unlink").addEventListener('click', function () {openProject._linkNewProject(project.id, reqId, project.customField2, "FALSE")}, false);
                         //var itemsTotal = project.itemsActive + project.itemsCompleted;
                         let id = project.id;
-                        console.log("getall work packages", this._getAllWorkPackages(id));
-
 
                         //issueElement.querySelector(".tasks").textContent = 10;
                         issueElement.querySelector(".summary").title = project.name;
 
                         if (result) {
-                            console.log("Work package count:", result.count);
+                            //console.log("Work package count:", result.count);
                         }
                         if (!this._issuesElement.textContent.indexOf(issueElement.textContent) != -1) {
                             this._issuesElement.appendChild(issueElement);
                         }
-                    });
-                    
-                    //issueElement.querySelector(".tasks").textContent = project._links.status.title;
-                    //issueElement.querySelector(".assignee").textContent = project.clientcontact.firstname + " " + project.clientcontact.lastname;
-                    //issueElement.querySelector(".unlink").setAttribute("data-issue-number", project.id);
-                    
-
-                    
+                    });            
                     
                 }, _getAllWorkPackages: async function (id) {
                     try {
-                        console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllWorkPackages&reqId=" + id);
 
                         const response = await fetch(
                             openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllWorkPackages&reqId=" + id,
@@ -812,9 +714,6 @@
 
                 _unlinkProject: async function (id) {
                     try {
-                        //link will be a booleon
-
-
                         const response = await fetch(
                             openProject._getPluginPath() + "handler/ApiHandler.ashx?action=unlinkProject&id=" + id,
                             {
@@ -838,12 +737,18 @@
                         return null;
                     }
                 },
-                _linkNewProject: async function (projectId, reqId) {
+                _linkNewProject: async function (projectId, reqId, customField2 = null, link = null) {
+                    let url = openProject._getPluginPath() + "handler/ApiHandler.ashx?action=unlinkProject&id=" + projectId + "&reqId=" + reqId;
+                    if (customField2 !== null) {
+                        url += "&customField2=" + customField2;
+                    }
+                    if (link !== null) {
+                        url += "&link=" + link;
+                    }
+                    console.log("url of link project is ", url);
                     try {
-                        //link will be a booleon
-
                         const response = await fetch(
-                            openProject._getPluginPath() + "handler/ApiHandler.ashx?action=unlinkProject&id=" + projectId + "&reqId=" + reqId,
+                            url,
                             {
                                 method: "POST",
                                 headers: {
@@ -858,7 +763,6 @@
 
                         const result = await response.json();
                         this._renderProjects();
-                        console.log("link new project should have worked!");
                         return result;
 
                     } catch (error) {
@@ -869,7 +773,6 @@
                 _getProjectWithIdentifier: async function (identifier) {
                     try {
                         const url = this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + encodeURIComponent(identifier);
-                        console.log("so we are here in render projects", url);
 
                         const response = await fetch(url, {
                             method: "GET",
@@ -883,8 +786,33 @@
                         }
 
                         const result = await response.json();
-                        console.log("result is from identifier", result);
+                        this._renderProjects();
 
+                        return result;
+                    } catch (error) {
+                        console.error("Failed to get projects:", error);
+                        this._errorPopup();
+                        // Optionally re-throw if you want callers to catch the error
+                        // throw error;
+                    }
+                },
+                _getAllProjects: async function () {
+                    try {
+                        const url = this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects2"; //get all projects 2
+
+                        const response = await fetch(url, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json; charset=utf-8"
+                            }
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+                        }
+
+                        const result = await response.json();
+                        console.log("get all projects result is", result);
                         this._renderProjects();
 
                         return result;
@@ -896,55 +824,21 @@
                     }
                 },
 
-                //_getProjectWithIdentifier: function (identifier) {
-                //    console.log("so we are here in render projects ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + identifier);
-                //    this._renderIssuesRequest = $.ajax({
-                //        type: "GET",
-                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&identifier=" + identifier,
-                //        contentType: "application/json; charset=utf-8",
-                //        dataType: "json",
-                //        success: function (result) {
-                //            console.log("result isfrom identifier ", result);
-
-                //        }.bind(this),
-                //        error: function () {
-                //            this._errorPopup();
-                //        }.bind(this)
-                //    });
-                //},
-                
-
-
                 _renderProjects: function () {
-                    //let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                    //console.log("so we are here ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId);
-                    //fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId, {
                     if (this._renderIssuesRequest) {
                         this._renderIssuesRequest.abort();
                         this._renderIssuesRequest = null;
                     }
-                    // this._getProjectTemplates();
-                    
 
                     var globalRes;
-                    //let id = this._printAllProjects();
-                    //openProject._getAllWorkPackages(id).then(result => {
-                    //    if (result) {
-                    //        console.log("Work package count:", result.count);
-                    //        globalRes = result.count;
-                    //    }
-                    //});
-                    
 
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                    console.log("so we are here in render projects ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + RequestID);
                     this._renderIssuesRequest = $.ajax({
                         type: "GET",
                         url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + RequestID,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (result) {
-                            console.log("result is ", result);
                             this._issuesElement.innerHTML = '';
 
                             this._htmlPrefix = result.htmlPrefix;
@@ -955,18 +849,10 @@
                             window.top.document.body.appendChild(styleElement);
 
                             let projectId = result._embedded.elements.id;
-
-
-                            
-                            console.log("prjid is, ", projectId);
                             
                             styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + globalRes + "';  }", 0);
                             
                             this._issuesElement.style.backgroundImage = "";
-                            // result.issues.forEach(this._renderIssue.bind(this));
-                            //result._embedded.elements
-                            //result.data.projects.forEach(this._renderProject.bind(this));
-                            console.log("for eahc is", result._embedded.elements);
                             result._embedded.elements.forEach(this._renderProject.bind(this));
                         }.bind(this),
                         error: function () {
@@ -1014,8 +900,6 @@
                     }).then(result => {
                         console.log("project created successfully!, ", result);
 
-
-
                     }).catch(error => {
                         console.error("Failed to create projects: ", error);
                     });
@@ -1045,62 +929,29 @@
                         });
                 },
 
-                //_loadProjectTemplates: function () {
-                //    $.ajax({
-                //        type: "GET",
-                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetProjectTemplates",
-                //        contentType: "application/json; charset=utf-8",
-                //        dataType: "json",
-                //        success: function (result) {
-                //            this._typeElement.style.backgroundImage = "";
-                //            this._typeElement.style.display = 'block';
-                //            var projectKeys = result.data.projects;
-                //            $.each(projectKeys, function (index, template) {
-
-
-                //                var option = document.createElement("option");
-                //                option.text = template.title;
-                //                option.id = template.id;
-
-                //                $('.IssueTypeSelect').append(option);
-
-                //            });
-
-                //        }.bind(this),
-                //        error: function () {
-                //            this._errorPopup();
-                //        }.bind(this)
-                //    });
-                //},
-
-
-
-    //           
-                
-
-                _getContactUsername: function () {
-                    if (this._contactEmail != null) {
-                        $.ajax({
-                            type: "GET",
-                            url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectUsers&contactEmail=" + this._contactEmail,
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (result) {
-                                if (result.length > 0) {
-                                    this._contactUsername = result[0]["name"];
-                                    this._reporterCheckboxElement.disabled = false;
-                                    this._reporterCheckboxLabel.style.color = "black";
-                                    this._reporterCheckboxLabel.innerText = this._reporterCheckboxLabel.innerText + " (" + this._contactUsername + ")";
-                                }
-                            }.bind(this),
-                            error: function () {
-                                this._errorPopup();
-                            }.bind(this)
-                        });
-                    }
-                }, _loadProjectTemplates: function () {
+                //_getContactUsername: function () {
+                //    if (this._contactEmail != null) {
+                //        $.ajax({
+                //            type: "GET",
+                //            url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectUsers&contactEmail=" + this._contactEmail,
+                //            contentType: "application/json; charset=utf-8",
+                //            dataType: "json",
+                //            success: function (result) {
+                //                if (result.length > 0) {
+                //                    this._contactUsername = result[0]["name"];
+                //                    this._reporterCheckboxElement.disabled = false;
+                //                    this._reporterCheckboxLabel.style.color = "black";
+                //                    this._reporterCheckboxLabel.innerText = this._reporterCheckboxLabel.innerText + " (" + this._contactUsername + ")";
+                //                }
+                //            }.bind(this),
+                //            error: function () {
+                //                this._errorPopup();
+                //            }.bind(this)
+                //        });
+                //    }
+                //}, 
+                _loadProjectTemplates: function () {
                     
-                    console.log("openProject path: ", openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates");
                     fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates", {
                         method: "GET",
                         headers: {
@@ -1113,12 +964,10 @@
                         return response.json()
 
                     }).then(result => {
-                        console.log("Projects Response:", result);
 
                         console.log("We should be appending now templates");
 
                         const $dropdown = $("#ProjectTemplateSelection");
-                        console.log("Dropdown length:", $dropdown.length);
                         $dropdown.empty();
 
                         $dropdown.append($('<option>', {
@@ -1132,8 +981,6 @@
                                 text: project.name
                             }));
                         });
-
-
 
                     }).catch(error => {
                         console.error("Failed to fetch projects: ", error);
@@ -1245,22 +1092,6 @@
                         this._issuesElement.removeChild(this._issuesElement.firstChild);
                     }
                 },
-                //_unlinkIssue: function (issueNumber) {
-                //    this._issuesElement.removeChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
-                //    var that = this;
-                //    $.ajax({
-                //        type: "DELETE",
-                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=UnlinkMarvalProjectsIssue&requestNumber=" + this._requestNumber + "&" + "issueNumber=" + issueNumber,
-                //        contentType: "application/json; charset=utf-8",
-                //        dataType: "text",
-                //        success: function () {
-                //            that._renderProjects();
-                //        }.bind(this),
-                //        error: function (error) {
-                //            this._issuesElement.addChild(this._issuesElement.querySelector('[data-issue-number="' + issueNumber + '"]').parentNode.parentNode);
-                //        }.bind(this)
-                //    });
-                //},
 
                 _linkIssue: function (issueNumber) {
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
@@ -1291,20 +1122,17 @@
                     this._typeLoadingElement.style.backgroundImage = 'url("' + this._getPluginPath() + '/img/spinner.gif")';
                     this._summaryElement = this._element.querySelector(".issueSummaryWrapper > input");
                     //this._createElement = this._element.querySelector("button");
-                    this._selectAttachmentElement = this._element.querySelector(".selectAttachments");
-                    this._setSelectedAttachmentCount(0);
-                    this._contactCheckbox = this._element.querySelector(".issueOptions input");
+                    //this._selectAttachmentElement = this._element.querySelector(".selectAttachments");
+                    //this._setSelectedAttachmentCount(0);
+                    //this._contactCheckbox = this._element.querySelector(".issueOptions input");
                     this._issueOptionsElement = this._element.querySelector(".issueOptions");
-
-                    //this._sendMessageButton = this._element.querySelector("#createProject");
-                    //eventManager.addHandler(this._sendMessageButton, "click", this._createProject, this);
 
                     this._sendMessageButtonTwo = this._element.querySelector("#createProjectTwo");
                     eventManager.addHandler(this._sendMessageButtonTwo, "click", this._createProject, this);
 
-                    this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
-                    this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
-                    eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
+                    //this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
+                   // this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
+                    //eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
                     //eventManager.addHandler(this._createElement, "click", this._createElement_click, this);
                     eventManager.addHandler(this._summaryElement, "input", this._handleInput, this);
                     eventManager.addHandler(this._typeElement, "change", this._typeElement_change, this);
@@ -1344,14 +1172,14 @@
                         var templateElement = window.top.document.importNode(template, true);
                         var attachmentTemplateDiv = templateElement.querySelector(".MarvalSowftware-OpenProject-Attachments");
                         attachmentTemplateDiv.innerHTML = this._preProcessResourceString(attachmentTemplateDiv.innerHTML);
-                        var checkboxLabel = templateElement.querySelector(".attachmentLabel");
-                        var checkbox = templateElement.querySelector(".attachmentCheckbox");
-                        checkbox.name = this._getString("@@AttachmentCheckBox");
-                        checkbox.value = this._attachments[i].Identifier;
-                        checkbox.id = this._attachments[i].Name;
-                        //checkbox.checked = this._selectedAttachmentIds.indexOf(this._attachments[i].Identifier) > -1 ? true : false;
-                        checkboxLabel.htmlFor = checkbox.id;
-                        checkboxLabel.innerHTML = checkbox.id + " (<strong>Size:</strong> " + (this._attachments[i].Length / 1000) + "kb)";
+                        //var checkboxLabel = templateElement.querySelector(".attachmentLabel");
+                        //var checkbox = templateElement.querySelector(".attachmentCheckbox");
+                        //checkbox.name = this._getString("@@AttachmentCheckBox");
+                        //checkbox.value = this._attachments[i].Identifier;
+                        //checkbox.id = this._attachments[i].Name;
+                        ////checkbox.checked = this._selectedAttachmentIds.indexOf(this._attachments[i].Identifier) > -1 ? true : false;
+                        //checkboxLabel.htmlFor = checkbox.id;
+                        //checkboxLabel.innerHTML = checkbox.id + " (<strong>Size:</strong> " + (this._attachments[i].Length / 1000) + "kb)";
                         container.appendChild(templateElement);
                     }
                 },
@@ -1363,7 +1191,7 @@
                         contentType: "text/html",
                         success: function (response) {
                             this._selectedAttachmentIds = [];
-                            this._setSelectedAttachmentCount(0);
+                            //this._setSelectedAttachmentCount(0);
                         }.bind(this),
                         error: function () {
                             this._errorPopup();
@@ -1371,9 +1199,9 @@
                     });
                 },
 
-                _setSelectedAttachmentCount: function (count) {
-                    this._selectAttachmentElement.innerText = this._getString("@@SelectedAttachments", "" + count + "/" + this._attachments.length + "");
-                },
+                //_setSelectedAttachmentCount: function (count) {
+                //    this._selectAttachmentElement.innerText = this._getString("@@SelectedAttachments", "" + count + "/" + this._attachments.length + "");
+                //},
 
                 _showAttachmentsPopup: function (sender, e) {
                     e.preventDefault();
@@ -1407,7 +1235,7 @@
                                          this._selectedAttachmentIds.splice(indexToRemove, 1);
                                      }
                                  }
-                                 this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
+                                 //this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
                              }
                          }, this)
                      );
@@ -1440,10 +1268,37 @@
                             isMaximizable: true,
                             bodyElement: this
                         });
-                        //this._printAllProjects();
                         this._renderElement();
                         this._loadSummaryFromDescription();
+                        console.log("render projects is running 1273");
                         this._renderProjects();
+                        console.log("matching projects function is running below 1275");
+                        (async function () {
+                            console.log("matching projects 1277");
+                            const reqId = "3"; // <-- this would be dynamically retrieved in real use
+                            let RID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+
+                            try {
+                                console.log("we  are at line 1282");
+                                const allProjectsResult = await openProject._getAllProjects(); // your function
+                                console.log("all projects result is ", allProjectsResult);
+                                const projects = allProjectsResult._embedded?.elements || [];
+
+                                projects.forEach(project => {
+                                    const customField = project.customField2 || "";
+                                    const identifiers = customField.split(",").map(id => id.trim());
+
+                                    console.log("Checking if", RID, "is in", identifiers);
+
+                                    if (identifiers.includes(RID)) {
+                                        console.log("✅ Matching Project:", project);
+                                    }
+                                });
+                            } catch (error) {
+                                console.error("❌ Failed to process projects:", error);
+                            }
+                        })();
+
                         this._loadProjectTemplates();
 
                     }
@@ -1552,6 +1407,7 @@
                 },
 
                 _preRequisiteCheck: function (sender, e) {
+                    console.log("popup should be opening");
                     this._popup();
                     this._PingCheck();
 
@@ -1564,6 +1420,7 @@
         <div>
             <label>${this._getString("@@EnterOpenProjectIssueNumber")}</label>
             <input type="text" id="projectIdentifierInput" />
+            <button id="searchProjectBtn">Search</button>
             <table id="projectResultsTable" border="1" style="margin-top: 10px; width: 100%;">
                 <thead>
                     <tr>
@@ -1579,13 +1436,9 @@
             </table>
         </div>
     `;
-    /*var divElement = window.top.document.createElement("DIV");
-divElement.innerHTML = this._getString("@@EnterProWorkflowIssueNumber");
-var aElement = divElement.getElementsByTagName("INPUT")[0];*/ 
+
 
                     var aElement = wrapperDiv.querySelector("#projectIdentifierInput");
-                   // aElement = this._getString("@@EnterOpenProjectIssueNumber");
-                    //openProject._getProjectWithIdentifier("hello");
 
                     var messageBox = MarvalSoftware.UI.MessageBox.show(
                         this._getString("@@LinkOpenProjectIssueTitle"),
@@ -1608,41 +1461,77 @@ var aElement = divElement.getElementsByTagName("INPUT")[0];*/
                     }, this);
 
                     aElement.focus();
-                    openProject._getProjectWithIdentifier("hello").then(result => {
-                        const projects = result._embedded?.elements || [];
-                        const tbody = wrapperDiv.querySelector("#projectResultsTable tbody");
 
-                        // Clear existing rows
-                        tbody.innerHTML = "";
+                    wrapperDiv.querySelector("#searchProjectBtn").addEventListener("click", () => {
+                        const x = wrapperDiv.querySelector("#projectIdentifierInput").value.trim();
+                        if (!x) return;
 
-                        if (projects.length === 0) {
-                            const row = document.createElement("tr");
-                            row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
-                            tbody.appendChild(row);
-                        } else {
-                            projects.forEach(project => {
+                        openProject._getProjectWithIdentifier(x).then(result => {
+                            const projects = result._embedded?.elements || [];
+                            const tbody = wrapperDiv.querySelector("#projectResultsTable tbody");
+
+                            // Clear existing rows
+                            tbody.innerHTML = "";
+
+                            if (projects.length === 0) {
                                 const row = document.createElement("tr");
-                                row.innerHTML = `
-                    <td>${project.id}</td>
-                    <td>${project.name}</td>
-                    <td>
-                    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}">link</button>
-                    </td>
-                `;
+                                row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
                                 tbody.appendChild(row);
-                            });
-                        }
-                    }).catch(error => {
-                        console.error("❌ Failed to fetch project data:", error);
+                            } else {
+                                projects.forEach(project => {
+                                    const row = document.createElement("tr");
+                                    row.innerHTML = `
+    <td>${project.id}</td>
+    <td>${project.name}</td>
+    <td>
+    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project.customField2}">link</button>
+    </td>
+`;
+                                    tbody.appendChild(row);
+                                });
+                            }
+                            // same logic here
+                        }).catch(error => {
+                            console.error("❌ Failed to fetch project data:", error);
+                        });
                     });
+
+                //    openProject._getProjectWithIdentifier("hello").then(result => {
+                //        const projects = result._embedded?.elements || [];
+                //        const tbody = wrapperDiv.querySelector("#projectResultsTable tbody");
+
+                //        // Clear existing rows
+                //        tbody.innerHTML = "";
+
+                //        if (projects.length === 0) {
+                //            const row = document.createElement("tr");
+                //            row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
+                //            tbody.appendChild(row);
+                //        } else {
+                //            projects.forEach(project => {
+                //                const row = document.createElement("tr");
+                //                row.innerHTML = `
+                //    <td>${project.id}</td>
+                //    <td>${project.name}</td>
+                //    <td>
+                //    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}">link</button>
+                //    </td>
+                //`;
+                //                tbody.appendChild(row);
+                //            });
+                //        }
+                //    }).catch(error => {
+                //        console.error("❌ Failed to fetch project data:", error);
+                //    });
                     let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                     wrapperDiv.addEventListener("click", function (event) {
                         if (event.target.classList.contains("linkProjectButton")) {
                             const projectId = event.target.getAttribute("data-id");
                             const projectName = event.target.getAttribute("data-name");
-                            console.log(`🔗 Linking project ID: ${projectId}, Name: ${projectName}`);
+                            const customField2 = event.target.getAttribute("data-customField2");
+                            console.log(`🔗 Linking project ID: ${projectId}, Name: ${projectName}, customField2: ${customField2}`);
 
-                            openProject._linkNewProject(projectId, reqId);
+                            openProject._linkNewProject(projectId, reqId, customField2, "TRUE");
                         }
                     });
 
@@ -1658,11 +1547,6 @@ var aElement = divElement.getElementsByTagName("INPUT")[0];*/
                     //this._createElement.disabled = !this._summaryElement.value.length > 0;
                 },
 
-                //_createElement_click: function (sender, e) {
-                //    this._createNewProject(this._summaryElement.value, this._typeElement.value, this._typeElement.options[this._typeElement.selectedIndex].parentNode.label);
-                //    //this._createElement.disabled = true;
-                //    e.preventDefault();
-                //},
             });
     })();
 
