@@ -313,23 +313,52 @@ public class ApiHandler : PluginHandler
                 context.Response.Write(responseContent3);
 
                 break;
-            case "unlinkProject":
+            //should do a link project
+            //then in frontend we can check if customfield2 already has stuff if in it, if it does we do append and new case link project append, if not we go tro unlink project
+            case "unlinkProject": //technically it is still link project
                 string cInput = "0"; //cannot be blank, need to set it as something
-                if (!string.IsNullOrEmpty(context.Request.QueryString["reqId"]))
+                //string customField2Value = (context.Request.QueryString["customField2"]);
+                //string reqIdValue = context.Request.QueryString["reqId"];
+                if (!string.IsNullOrEmpty(context.Request.QueryString["reqId"]) && !string.IsNullOrEmpty(context.Request.QueryString["customField2"]))
                 {//meaning that we are linking
-                    cInput = context.Request.QueryString["reqId"];
+                    string customField2Value = (context.Request.QueryString["customField2"]);
+                    string reqIdValue = context.Request.QueryString["reqId"];
+                    string link =  context.Request.QueryString["link"];
+                    
+                    if (!customField2Value.Split(',').Contains(reqIdValue) && link != "FALSE")
+                    {
+                        cInput = customField2Value + "," + reqIdValue;
+                        Log.Information("customfield 2 is now appending to: " + cInput);
+                    }
+                    else if(link == "FALSE")
+                    {
+                        var parts = customField2Value
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(p => p.Trim())
+                        .Where(p => p != reqIdValue) // remove the one we're unlinking
+                        .ToList();
+
+                        cInput = string.Join(",", parts); // recombine the list
+                        Log.Information("customfield 2 after unlinking reqId: " + cInput);
+                    }
+                    //cInput = context.Request.QueryString["reqId"];
+                }else if (!string.IsNullOrEmpty(context.Request.QueryString["reqId"]))
+                {
+                    cInput = context.Request.QueryString["reqId"]; //means customfield2 is currently blank, means we simply set it to the request id to link them
                 }
 
                 string apiKey3 = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
                 string encodedAuth3 = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey3));
 
-                    //so if we are linking, attribute = req id, if unlinking we are settting attribute to be blank!
+                //so if we are linking, attribute = req id, if unlinking we are settting attribute to be blank!
                 var myPayload3 = new
                 {
-                    customField1 = cInput
+                    customField2 = cInput
                 };
+
                 string payloadJson3 = JsonConvert.SerializeObject(myPayload3);
                 projectId = context.Request.QueryString["id"];
+                Log.Information("mypayload is ", payloadJson3);
 
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects/" + projectId, payloadJson3, "PATCH");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth3;
@@ -348,7 +377,7 @@ public class ApiHandler : PluginHandler
                 }
                 else
                 {
-                    filter = "customField1";
+                    filter = "customField3";
                     identifier = context.Request.QueryString["reqId"];
                 }
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
@@ -356,6 +385,25 @@ public class ApiHandler : PluginHandler
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
                 var responseContent = this.ProcessRequest2(httpWebRequest);
                 context.Response.Write(responseContent);
+
+                break;
+            case "getAllProjects2": //gets all projects
+                string identifier2 = "";
+                if (!string.IsNullOrEmpty(context.Request.QueryString["identifier"]))//we have an identifier so we want to filter with identifier
+                {
+                    filter = "name_and_identifier";
+                    identifier2 = context.Request.QueryString["identifier"];
+                }
+                else
+                {
+                    filter = "customField3";
+                    identifier2 = context.Request.QueryString["reqId"];
+                }
+                httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects");
+
+                httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth;
+                var responseContent4 = this.ProcessRequest2(httpWebRequest);
+                context.Response.Write(responseContent4);
 
                 break;
             case "getOpenProjectTemplates":
@@ -693,7 +741,7 @@ public class ApiHandler : PluginHandler
         }
 
         return issueDetails;
-    }                                 
+    }
 
     private string GetRequestBaseTypeIconUrl(int requestBaseType)
     {
@@ -704,7 +752,7 @@ public class ApiHandler : PluginHandler
             icon = "change";
         }
         return string.Format("{0}{1}/Assets/Skins/{2}/Icons/{3}_32.png", HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority), MarvalSoftware.UI.WebUI.ServiceDesk.WebHelper.ApplicationPath, MarvalSoftware.UI.WebUI.Style.StyleSheetManager.Skin, icon);
-    } 
+    }
 
     /// <summary>
     /// Gets attachment DTOs from array of attachment Ids
