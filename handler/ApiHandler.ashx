@@ -338,7 +338,9 @@ public class ApiHandler : PluginHandler
                         .Where(p => p != reqIdValue) // remove the one we're unlinking
                         .ToList();
 
-                        cInput = string.Join(",", parts); // recombine the list
+                   //     cInput = string.Join(",", parts); // recombine the list
+
+                        cInput = parts.Count == 0 ? "0" : string.Join(",", parts);
                         Log.Information("customfield 2 after unlinking reqId: " + cInput);
                     }
                     //cInput = context.Request.QueryString["reqId"];
