@@ -298,7 +298,7 @@
                 </div>
             </div>
             <div class="issueSummaryWrapper">
-                <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
+                <input type="text" placeholder="Project Description" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
             <button id="createProjectTwo">Create</button>
         </div>
@@ -641,9 +641,7 @@
                         var issueTemplate = document.querySelector(".issueTemplate").content;
                         var issueElement = window.top.document.importNode(issueTemplate, true);
                         var issueTemplateDiv = issueElement.querySelector(".issue");
-                       
-                        // var contentSel =  window.top.document.querySelector(".content");
-                        // window.top.document.querySelector('.content').classList.add('contentMarvalProjects');
+                    
 
                         $(document).ready(function () {
                             $(document).on('click', '.content', function () {
@@ -653,25 +651,13 @@
                                 }, 1000); // 1000 milliseconds = 1 second (adjust as needed)
                             });
                         });
-                        // $('.content').addClass('contentMarvalProjects');
-                        // contentSel.addClass('contentMarvalProjects');
                         issueTemplateDiv.innerHTML = this._preProcessResourceString(issueTemplateDiv.innerHTML);
                         var numberElement = issueElement.querySelector(".number");
                         //numberElement.textContent = project.title;
                         // numberElement.href = project.title;
                         var count = 0;
                         var countuncompleted = 0;
-                        //$.each(project.tasks, function (index, task) {
 
-                        //    if (task.completedate === "") {
-                        //        count++; // Increment count if completedate is empty
-                        //    } else {
-                        //        countuncompleted++;
-                        //        count++;
-                        //    }
-                        //});
-                        // numberElement.href = numberElement.protocol + "//" + numberElement.hostname + (numberElement.port ? ":" + numberElement.port : "") + "/browse/" + issue.key;
-                        //numberElement.href = "https://app.openproject.com/" + this._htmlPrefix + "/?fuseaction=trackedprojects&fusesubaction=details&Jobs_currentJobID=" + project.id;
                         console.log("we are currently rendering project with name: ", project.name);
                         issueElement.querySelector(".status").textContent = project._links.status.title;
                         issueElement.querySelector(".summary").textContent = project.description.raw;
@@ -803,8 +789,6 @@
                     } catch (error) {
                         console.error("Failed to get projects:", error);
                         this._errorPopup();
-                        // Optionally re-throw if you want callers to catch the error
-                        // throw error;
                     }
                 },
                 _getAllProjects: async function () {
@@ -824,14 +808,12 @@
 
                         const result = await response.json();
                         console.log("get all projects result is", result);
-                        //this._renderProjects();
 
                         return result;
                     } catch (error) {
                         console.error("Failed to get projects:", error);
                         this._errorPopup();
-                        // Optionally re-throw if you want callers to catch the error
-                        // throw error;
+
                     }
                 },
                 _renderProjects: function () {
@@ -839,10 +821,6 @@
                         this._renderIssuesRequest.abort();
                         this._renderIssuesRequest = null;
                     }
-
-                    //let issueElement = window.top.document.importNode(issueTemplate, true);
-                    
-
 
                     const RequestID = String(MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId).trim();
                     console.log("current req id is", RequestID);
@@ -897,9 +875,20 @@
                 },
 
                 _createProject: function (sender, e) {
+                    const msg = document.createElement("div");
+                    msg.id = "linkStatusNotice";
+                    msg.style.marginTop = "10px";
+                    msg.style.fontWeight = "bold";
+                    msg.style.color = "green";
+                    msg.textContent = "Project linked successfully!";
+                    msg.display = "none";
+                    let issueDiv = window.top.document.getElementsByClassName("newIssue")[0];
+                    issueDiv.appendChild(msg);
+
                     let selectedIndex = $("#ProjectTemplateSelection")[0].selectedIndex;
                     let payload = {};
                     let selectedID = $("#ProjectTemplateSelection").val();
+                    let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                     console.log("selected id is: ", selectedID);
                     let inputtext = $("#projectDescription").val();
                     if (selectedIndex > 0) {
@@ -921,7 +910,7 @@
                     e.preventDefault();
                     
                     console.log("we are now creating a project ", payload);
-                    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject", {
+                    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json; charset=utf-8"
@@ -935,11 +924,30 @@
 
                     }).then(result => {
                         console.log("project created successfully!, ", result);
-
+                        this._renderProjects();
+                        const msg = window.top.document.getElementById("linkStatusNotice");
+                        if (msg) {
+                            msg.style.display = "block";
+                            $(msg).fadeOut(1000, function () {
+                                this.remove(); 
+                            });
+                        }
                     }).catch(error => {
+                        let msg = window.top.document.getElementById("linkStatusNotice");
+                        if (msg) {
+                            msg.style.display = "block";
+                            msg.style.color = "red";
+                            msg.textContent = "Project not linked correctly!";
+                            $(msg).fadeOut(1000, function () {
+                                this.remove(); 
+                            });
+                        }
+
                         console.error("Failed to create projects: ", error);
                     });
-                }, _printAllProjects: function () {
+                },
+
+                _printAllProjects: function () {
                     const reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                     const url = openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + reqId;
 
