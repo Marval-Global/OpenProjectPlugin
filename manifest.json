@@ -1,4 +1,4 @@
-﻿{
+{
   "Name": "MarvalSoftware.Plugins.OpenProject",
   "Organisation": "MarvalSoftware",
   "DisplayName": "@@PluginDisplayname",
@@ -22,11 +22,8 @@
   "HtmlImportFile": "MarvalSoftware.Plugins.OpenProject.html",
   "TagName": "marval-software-plugins-openproject",
   "GlobalSettings": [
-    "@@OpenProjectAPIEndpointUrl",
-    "@@OpenProjectAPIKey",
-    "@@OpenProjectWorkspaceName",
-    "@@MSMAPIKey",
-    "@@ClosureStatus"
+    "@@APIKEY"
+    
   ],
   "QuickSearchTypes": [
 	  {
