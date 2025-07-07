@@ -541,14 +541,12 @@
 
                         var that = this;
                         const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                        console.log("Value is ", field.value);
                         const container = document.getElementById("itemsContainer");
                         if (field.value) {
                             const data = JSON.parse(field.value);
-                            const items = data.items;
-                            console.log("Adding item in main section");
+                            const items = data.items;");
                             items.forEach((item, index) => {
-                                console.log("Items are %s and %s ", item[0], item[1]);
+                                //console.log("Items are %s and %s ", item[0], item[1]);
                                 addItem(item[0], item[1]);
                             });
                         }
@@ -598,7 +596,6 @@
                         if (currentUrl.includes("Request.aspx")) {
                             this._requestNumber = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getRequestNumber();
                             let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                            //console.log("request number is: ", reqId);
                             this._contactEmail = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getContactPreferredEmail();
                             this._requestDescription = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getDescription();
                             this._attachments = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage().getAttachments();
@@ -617,7 +614,7 @@
                     const field = document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
                     const container = document.getElementById("itemsContainer");
                     const items = JSON.parse(field.value);
-                    console.log("Adding item in load items ");
+                    //console.log("Adding item in load items ");
                     items.forEach((item, index) => {
                         that.addItem(item[0], item[1]);
                     });
@@ -656,13 +653,10 @@
                         //numberElement.textContent = project.title;
                         // numberElement.href = project.title;
                         var count = 0;
-                        var countuncompleted = 0;
-
-                        console.log("we are currently rendering project with name: ", project.name);
+                        var countuncompleted = 0;;
                         issueElement.querySelector(".status").textContent = project._links.status.title;
                         issueElement.querySelector(".summary").textContent = project.description.raw;
                         issueElement.querySelector(".tasks").textContent = result.count;
-                        console.log("issue name is", result.name);
                         issueElement.querySelector(".name").textContent = project.name;
 
                         let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
@@ -740,7 +734,6 @@
                     if (link !== null) {
                         url += "&link=" + link;
                     }
-                    console.log("url of link project is ", url);
                     try {
                         const response = await fetch(
                             url,
@@ -807,8 +800,6 @@
                         }
 
                         const result = await response.json();
-                        console.log("get all projects result is", result);
-
                         return result;
                     } catch (error) {
                         console.error("Failed to get projects:", error);
@@ -823,7 +814,6 @@
                     }
 
                     const RequestID = String(MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId).trim();
-                    console.log("current req id is", RequestID);
 
                     this._renderIssuesRequest = $.ajax({
                         type: "GET",
@@ -841,7 +831,7 @@
                             const projectIds = new Set();
                             result._embedded.elements.forEach(project => {
                                 if (projectIds.has(project.id)) {
-                                    console.log("⚠️ Duplicate project detected:", project);
+                                    console.log("Duplicate project detected:", project);
                                 } else {
                                     projectIds.add(project.id);
                                 }
@@ -889,10 +879,8 @@
                     let payload = {};
                     let selectedID = $("#ProjectTemplateSelection").val();
                     let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                    console.log("selected id is: ", selectedID);
                     let inputtext = $("#projectDescription").val();
-                    if (selectedIndex > 0) {
-                        console.log("user selected", $("#ProjectTemplateSelection").val());
+                    if (selectedIndex > 0) {;
                         payload = {
                             name: inputtext,
                             copy: true,
@@ -906,10 +894,8 @@
                         }
                     }
                     
-                    console.log("input text is: ", inputtext);
                     e.preventDefault();
                     
-                    console.log("we are now creating a project ", payload);
                     fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
                         method: "POST",
                         headers: {
@@ -923,7 +909,6 @@
                         return response.json()
 
                     }).then(result => {
-                        console.log("project created successfully!, ", result);
                         this._renderProjects();
                         const msg = window.top.document.getElementById("linkStatusNotice");
                         if (msg) {
@@ -973,27 +958,6 @@
                         });
                 },
 
-                //_getContactUsername: function () {
-                //    if (this._contactEmail != null) {
-                //        $.ajax({
-                //            type: "GET",
-                //            url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectUsers&contactEmail=" + this._contactEmail,
-                //            contentType: "application/json; charset=utf-8",
-                //            dataType: "json",
-                //            success: function (result) {
-                //                if (result.length > 0) {
-                //                    this._contactUsername = result[0]["name"];
-                //                    this._reporterCheckboxElement.disabled = false;
-                //                    this._reporterCheckboxLabel.style.color = "black";
-                //                    this._reporterCheckboxLabel.innerText = this._reporterCheckboxLabel.innerText + " (" + this._contactUsername + ")";
-                //                }
-                //            }.bind(this),
-                //            error: function () {
-                //                this._errorPopup();
-                //            }.bind(this)
-                //        });
-                //    }
-                //}, 
                 _loadProjectTemplates: function () {
                     
                     fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates", {
@@ -1008,8 +972,6 @@
                         return response.json()
 
                     }).then(result => {
-
-                        console.log("We should be appending now templates");
 
                         const $dropdown = $("#ProjectTemplateSelection");
                         $dropdown.empty();
@@ -1059,11 +1021,11 @@
                     //     var id = $("#selectId option:selected").attr("id")
                     var ProjectID = $('#ProjectTemplateSelection option:selected').attr('id');
                     var requestTempDescription = $('#projectDescription').val();
-                    console.log("May have description as ", requestTempDescription);
+                    //console.log("May have description as ", requestTempDescription);
                     //var newdescription = this._requestDescription;
                     var newdescription = 'Created from Marval request  ' + requestTypeWithNumber + '   ' + this._requestDescription;
                     // var projectSelectedId = $('.IssueTypeSelect').attr('id');
-                    console.log("Option selected is  ", ProjectID);
+                    //console.log("Option selected is  ", ProjectID);
                     var createProjectData = {
                         "title": requestTempDescription,
                         "priority": "3",
@@ -1101,7 +1063,6 @@
 
                     };
                     var that = this;
-                    console.log("Sending to backend ", createProjectData);
                     if (!projectSelectedValue) {
                         this._errorPopupMessage("Please select a project template");
                         this._issuesElement.style.backgroundImage = "";
@@ -1314,32 +1275,22 @@
                         });
                         this._renderElement();
                         this._loadSummaryFromDescription();
-                        console.log("render projects is running 1273");
                         this._renderProjects();
-                        console.log("matching projects function is running below 1275");
                         (async function () {
-                            console.log("matching projects 1277");
                             const reqId = "3"; // <-- this would be dynamically retrieved in real use
                             let RID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
 
                             try {
-                                console.log("we  are at line 1282");
                                 const allProjectsResult = await openProject._getAllProjects(); // your function
-                                console.log("all projects result is ", allProjectsResult);
                                 const projects = allProjectsResult._embedded?.elements || [];
 
                                 projects.forEach(project => {
                                     const customField = project.customField2 || "";
                                     const identifiers = customField.split(",").map(id => id.trim());
-
-                                    console.log("Checking if", RID, "is in", identifiers);
-
-                                    if (identifiers.includes(RID)) {
-                                        console.log("✅ Matching Project:", project);
-                                    }
+                         
                                 });
                             } catch (error) {
-                                console.error("❌ Failed to process projects:", error);
+                                console.error("Failed to process projects:", error);
                             }
                         })();
 
@@ -1416,8 +1367,8 @@
                     var styleElement = window.top.document.createElement("style");
                     window.top.document.body.appendChild(styleElement);
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                    console.log("Style element is ", styleElement);
-                    console.log("Style element sheet is ", styleElement.sheet);
+                   // console.log("Style element is ", styleElement);
+                    //console.log("Style element sheet is ", styleElement.sheet);
                     styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item { content: '2'; position: relative; background-image: url(" + this._getPluginPath() + "img/openproject_32.png); }", 0);
                     $.ajax({
                         type: "GET",
@@ -1451,7 +1402,6 @@
                 },
 
                 _preRequisiteCheck: function (sender, e) {
-                    console.log("popup should be opening");
                     this._popup();
                     this._PingCheck();
 
@@ -1527,28 +1477,22 @@
                             } else {
                                 projects.forEach(project => {
                                     const customField2 = project.customField2 || "";
-                                    //console.log("all ids for this project are ", ids);
                                     const ids = customField2.split(',').map(id => id.trim()); //get all req id linked to this project by splitting with a comma, then trimming extra spaces \
-                                    console.log("all ids for this project are ", ids);
-                                    console.log("current rq id is ", reqId);
-                                    if (ids.includes(String(reqId))) return; //project is already linked
-
-                                    //everything else is normal 
+                                    if (ids.includes(String(reqId))) return; //project is already linkedl 
                                     const row = document.createElement("tr");
                                     row.innerHTML = `
-    <td>${project.id}</td>
-    <td>${project.name}</td>
-    <td>${project.customField2}</td>
-    <td>
-    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project.customField2}">link</button>
-    </td>
-`;
+                                        <td>${project.id}</td>
+                                        <td>${project.name}</td>
+                                        <td>${project.customField2}</td>
+                                        <td>
+                                        <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project.customField2}">link</button>
+                                        </td>
+                                    `;
                                     tbody.appendChild(row);
                                 });
                             }
-                            // same logic here
                         }).catch(error => {
-                            console.error("❌ Failed to fetch project data:", error);
+                            console.error("Failed to fetch project data:", error);
                         });
                     });
 
@@ -1559,7 +1503,6 @@
                             const projectId = event.target.getAttribute("data-id");
                             const projectName = event.target.getAttribute("data-name");
                             const customField2 = event.target.getAttribute("data-customField2");
-                            console.log(`🔗 Linking project ID: ${projectId}, Name: ${projectName}, customField2: ${customField2}`);
 
                             const success = openProject._linkNewProject(projectId, reqId, customField2, "TRUE");
                             const existingNotice = wrapperDiv.querySelector("#linkStatusNotice");
@@ -1572,7 +1515,7 @@
                             msg.style.marginTop = "10px";
                             msg.style.fontWeight = "bold";
                             msg.style.color = success ? "green" : "red";
-                            msg.textContent = success ? "✅ Project linked successfully!" : "❌ Failed to link project.";
+                            msg.textContent = success ? "Project linked successfully!" : "Failed to link project.";
                             wrapperDiv.appendChild(msg);
                         }
                     });
