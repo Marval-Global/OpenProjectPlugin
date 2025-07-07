@@ -13,6 +13,10 @@
             display: block;
         }
 
+        .linkProjectButton{
+            cursor:pointer;
+        }
+
         .MarvalSoftware-OpenProject {
             position: absolute;
             top: 26px;
@@ -296,10 +300,10 @@
             <div class="issueSummaryWrapper">
                 <input type="text" placeholder="Summary" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
-            <button id="createProjectTwo"></button>-->
+            <button id="createProjectTwo">Create</button>
         </div>
 
-    </div>-->
+    </div>
 </template>
 
 <template class="TestPluginTemplate">
@@ -319,6 +323,7 @@
             <span class="status"></span>
             <span class="summary"></span>
             <span class="tasks" id="taskSpan">test</span>
+            <span class="name"></span>
         </div>
         <div class="right">
             <span class="assignee"></span>
@@ -656,7 +661,7 @@
                         // numberElement.href = project.title;
                         var count = 0;
                         var countuncompleted = 0;
-                        //$.each(project.tasks, function (index, task) {   
+                        //$.each(project.tasks, function (index, task) {
 
                         //    if (task.completedate === "") {
                         //        count++; // Increment count if completedate is empty
@@ -667,9 +672,13 @@
                         //});
                         // numberElement.href = numberElement.protocol + "//" + numberElement.hostname + (numberElement.port ? ":" + numberElement.port : "") + "/browse/" + issue.key;
                         //numberElement.href = "https://app.openproject.com/" + this._htmlPrefix + "/?fuseaction=trackedprojects&fusesubaction=details&Jobs_currentJobID=" + project.id;
+                        console.log("we are currently rendering project with name: ", project.name);
                         issueElement.querySelector(".status").textContent = project._links.status.title;
                         issueElement.querySelector(".summary").textContent = project.description.raw;
                         issueElement.querySelector(".tasks").textContent = result.count;
+                        console.log("issue name is", result.name);
+                        issueElement.querySelector(".name").textContent = project.name;
+
                         let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                         issueElement.querySelector(".unlink").addEventListener('click', function () {openProject._linkNewProject(project.id, reqId, project.customField2, "FALSE")}, false);
                         //var itemsTotal = project.itemsActive + project.itemsCompleted;
@@ -763,11 +772,13 @@
 
                         const result = await response.json();
                         this._renderProjects();
-                        return result;
+                        return true;
+                        //return result;
 
                     } catch (error) {
                         console.error("Failed to fetch unlink(we are linking it) project: ", error);
-                        return null;
+                        //return null;
+                        return false;
                     }
                 },
                 _getProjectWithIdentifier: async function (identifier) {
@@ -813,7 +824,7 @@
 
                         const result = await response.json();
                         console.log("get all projects result is", result);
-                        this._renderProjects();
+                        //this._renderProjects();
 
                         return result;
                     } catch (error) {
@@ -823,43 +834,68 @@
                         // throw error;
                     }
                 },
-
                 _renderProjects: function () {
                     if (this._renderIssuesRequest) {
                         this._renderIssuesRequest.abort();
                         this._renderIssuesRequest = null;
                     }
 
-                    var globalRes;
+                    //let issueElement = window.top.document.importNode(issueTemplate, true);
+                    
 
-                    var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+
+                    const RequestID = String(MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId).trim();
+                    console.log("current req id is", RequestID);
+
                     this._renderIssuesRequest = $.ajax({
                         type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects&reqId=" + RequestID,
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects2", // use endpoint that returns all
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (result) {
                             this._issuesElement.innerHTML = '';
-
                             this._htmlPrefix = result.htmlPrefix;
+
                             if (result.errors && result.errors[0]) {
                                 this._errorPopupMessage(result.errors[0].message);
                             }
+
+                            const projectIds = new Set();
+                            result._embedded.elements.forEach(project => {
+                                if (projectIds.has(project.id)) {
+                                    console.log("⚠️ Duplicate project detected:", project);
+                                } else {
+                                    projectIds.add(project.id);
+                                }
+                            });
+
+
                             var styleElement = window.top.document.createElement("style");
                             window.top.document.body.appendChild(styleElement);
 
-                            let projectId = result._embedded.elements.id;
-                            
-                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + globalRes + "';  }", 0);
-                            
+                            styleElement.sheet.insertRule(
+                                ".MarvalSoftware-OpenProject-quick-menu-item::before { content: ''; }",
+                                0
+                            );
+
                             this._issuesElement.style.backgroundImage = "";
-                            result._embedded.elements.forEach(this._renderProject.bind(this));
+
+                            const allProjects = result._embedded?.elements || [];
+
+                            const matchingProjects = allProjects.filter(project => {
+                                const field = project.customField2 || "";
+                                const ids = field.split(",").map(id => id.trim());
+                                return ids.includes(RequestID);
+                            });
+
+                            matchingProjects.forEach(this._renderProject.bind(this));
                         }.bind(this),
                         error: function () {
                             this._errorPopup();
                         }.bind(this)
                     });
                 },
+
                 _createProject: function (sender, e) {
                     let selectedIndex = $("#ProjectTemplateSelection")[0].selectedIndex;
                     let payload = {};
@@ -1215,30 +1251,30 @@
                     var selectNone = templateElement.querySelector(".selectNone");
                     eventManager.addHandler(selectAll, "click", this._selectAllAttachments, this);
                     eventManager.addHandler(selectNone, "click", this._deselectAllAttachments, this);
-                    this._renderAttachments(this._attachmentsCheckboxList);
-                    var attachmentPopup = MarvalSoftware.UI.MessageBox.show(
-                    this._getString("@@AttachmentPopUpTitle"),
-                         templateElement,
-                         MarvalSoftware.UI.MessageBox.INFORMATION,
-                         [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
-                         MarvalSoftware.UI.MessageBox.Buttons.OK,
-                         450,
-                         MarvalSoftware.createDelegate(function (sender, e) {
-                             if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
-                                 for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
-                                     var checkbox = this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0];
-                                     var value = parseInt(checkbox.value, 10);
-                                     if (checkbox.checked && this._selectedAttachmentIds.indexOf(value) < 0) {
-                                         this._selectedAttachmentIds.push(value);
-                                     } else if (!checkbox.checked && this._selectedAttachmentIds.indexOf(value) > -1) {
-                                         var indexToRemove = this._selectedAttachmentIds.indexOf(value);
-                                         this._selectedAttachmentIds.splice(indexToRemove, 1);
-                                     }
-                                 }
-                                 //this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
-                             }
-                         }, this)
-                     );
+                    //this._renderAttachments(this._attachmentsCheckboxList);
+                    //var attachmentPopup = MarvalSoftware.UI.MessageBox.show(
+                    //this._getString("@@AttachmentPopUpTitle"),
+                    //     templateElement,
+                    //     MarvalSoftware.UI.MessageBox.INFORMATION,
+                    //     [MarvalSoftware.UI.MessageBox.Buttons.OK, MarvalSoftware.UI.MessageBox.Buttons.CANCEL],
+                    //     MarvalSoftware.UI.MessageBox.Buttons.OK,
+                    //     450,
+                    //     MarvalSoftware.createDelegate(function (sender, e) {
+                    //         if (e.button === MarvalSoftware.UI.MessageBox.Buttons.OK) {
+                    //             for (var i = 0; i < this._attachmentsCheckboxList.getElementsByTagName("div").length; i++) {
+                    //                 var checkbox = this._attachmentsCheckboxList.getElementsByTagName("div")[i].getElementsByTagName("input")[0];
+                    //                 var value = parseInt(checkbox.value, 10);
+                    //                 if (checkbox.checked && this._selectedAttachmentIds.indexOf(value) < 0) {
+                    //                     this._selectedAttachmentIds.push(value);
+                    //                 } else if (!checkbox.checked && this._selectedAttachmentIds.indexOf(value) > -1) {
+                    //                     var indexToRemove = this._selectedAttachmentIds.indexOf(value);
+                    //                     this._selectedAttachmentIds.splice(indexToRemove, 1);
+                    //                 }
+                                                                         
+                    //             //this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
+                    //         }
+                    //     }, this)
+                    // );
                 },
 
                 _selectAllAttachments: function () {
@@ -1418,7 +1454,7 @@
 
                     wrapperDiv.innerHTML = `
         <div>
-            <label>${this._getString("@@EnterOpenProjectIssueNumber")}</label>
+            
             <input type="text" id="projectIdentifierInput" />
             <button id="searchProjectBtn">Search</button>
             <table id="projectResultsTable" border="1" style="margin-top: 10px; width: 100%;">
@@ -1426,6 +1462,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Requests Linked</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1465,6 +1502,8 @@
                     wrapperDiv.querySelector("#searchProjectBtn").addEventListener("click", () => {
                         const x = wrapperDiv.querySelector("#projectIdentifierInput").value.trim();
                         if (!x) return;
+                        let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
+
 
                         openProject._getProjectWithIdentifier(x).then(result => {
                             const projects = result._embedded?.elements || [];
@@ -1473,16 +1512,25 @@
                             // Clear existing rows
                             tbody.innerHTML = "";
 
-                            if (projects.length === 0) {
+                            if (projects.length === 0) { //cannot find any projects
                                 const row = document.createElement("tr");
                                 row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
                                 tbody.appendChild(row);
                             } else {
                                 projects.forEach(project => {
+                                    const customField2 = project.customField2 || "";
+                                    //console.log("all ids for this project are ", ids);
+                                    const ids = customField2.split(',').map(id => id.trim()); //get all req id linked to this project by splitting with a comma, then trimming extra spaces \
+                                    console.log("all ids for this project are ", ids);
+                                    console.log("current rq id is ", reqId);
+                                    if (ids.includes(String(reqId))) return; //project is already linked
+
+                                    //everything else is normal 
                                     const row = document.createElement("tr");
                                     row.innerHTML = `
     <td>${project.id}</td>
     <td>${project.name}</td>
+    <td>${project.customField2}</td>
     <td>
     <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project.customField2}">link</button>
     </td>
@@ -1496,33 +1544,7 @@
                         });
                     });
 
-                //    openProject._getProjectWithIdentifier("hello").then(result => {
-                //        const projects = result._embedded?.elements || [];
-                //        const tbody = wrapperDiv.querySelector("#projectResultsTable tbody");
 
-                //        // Clear existing rows
-                //        tbody.innerHTML = "";
-
-                //        if (projects.length === 0) {
-                //            const row = document.createElement("tr");
-                //            row.innerHTML = `<td colspan="2" style="text-align: center;">No results</td>`;
-                //            tbody.appendChild(row);
-                //        } else {
-                //            projects.forEach(project => {
-                //                const row = document.createElement("tr");
-                //                row.innerHTML = `
-                //    <td>${project.id}</td>
-                //    <td>${project.name}</td>
-                //    <td>
-                //    <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}">link</button>
-                //    </td>
-                //`;
-                //                tbody.appendChild(row);
-                //            });
-                //        }
-                //    }).catch(error => {
-                //        console.error("❌ Failed to fetch project data:", error);
-                //    });
                     let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                     wrapperDiv.addEventListener("click", function (event) {
                         if (event.target.classList.contains("linkProjectButton")) {
@@ -1531,7 +1553,19 @@
                             const customField2 = event.target.getAttribute("data-customField2");
                             console.log(`🔗 Linking project ID: ${projectId}, Name: ${projectName}, customField2: ${customField2}`);
 
-                            openProject._linkNewProject(projectId, reqId, customField2, "TRUE");
+                            const success = openProject._linkNewProject(projectId, reqId, customField2, "TRUE");
+                            const existingNotice = wrapperDiv.querySelector("#linkStatusNotice");
+                            if (existingNotice) {
+                                existingNotice.remove();
+                                
+                            }
+                            const msg = document.createElement("div");
+                            msg.id = "linkStatusNotice";
+                            msg.style.marginTop = "10px";
+                            msg.style.fontWeight = "bold";
+                            msg.style.color = success ? "green" : "red";
+                            msg.textContent = success ? "✅ Project linked successfully!" : "❌ Failed to link project.";
+                            wrapperDiv.appendChild(msg);
                         }
                     });
 
