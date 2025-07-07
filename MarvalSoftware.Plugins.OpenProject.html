@@ -411,71 +411,71 @@
 
                 init: function () {
                     openProject = this;
-                    setTimeout(() => {
-                        var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
-                        var currentUrl = window.top.location.href;
-                        if (currentUrl.includes("Plugin.aspx") && PWelement == 'MarvalSoftware.Plugins.OpenProject') {
-                            $("#" + "attributesControl_attribute_28_entry_28").val("test");
-                            const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
-                            $(keyelement2).val("test");
-                            keyelement2.style.display = 'none';
-                        }
-                    }, 1000);
-                    const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");             
+                    //setTimeout(() => {
+                    //    var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
+                    //    var currentUrl = window.top.location.href;
+                    //    if (currentUrl.includes("Plugin.aspx") && PWelement == 'MarvalSoftware.Plugins.OpenProject') {
+                    //        $("#" + "attributesControl_attribute_28_entry_28").val("test");
+                    //        const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
+                    //        $(keyelement2).val("test");
+                    //        keyelement2.style.display = 'none';
+                    //    }
+                    //}, 1000);
+                    //const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");             
 
-                    $(keyelement2).val("test");
+                    //$(keyelement2).val("test");
                     //
-                    const keyelement = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_key");
-                    if (keyelement) {
-                        keyelement.style.display = 'none';
-                    }
-                    function addItem(status = "", description = "") {
-                        if (typeof status !== "string") status = ""; // Ensure status is a string
-                        if (typeof description !== "string") description = ""; // Ensure description is a string
+                    //const keyelement = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_key");
+                    //if (keyelement) {
+                    //    keyelement.style.display = 'none';
+                    //}
+                    //function addItem(status = "", description = "") {
+                    //    if (typeof status !== "string") status = ""; // Ensure status is a string
+                    //    if (typeof description !== "string") description = ""; // Ensure description is a string
 
-                        const container = window.top.document.getElementById("itemsContainer");
+                    //    const container = window.top.document.getElementById("itemsContainer");
 
-                        const div = window.top.document.createElement("div");
-                        div.className = "item";
+                    //    const div = window.top.document.createElement("div");
+                    //    div.className = "item";
 
-                        const statusInput = window.top.document.createElement("input");
-                        statusInput.type = "text";
-                        statusInput.value = status;
-                        statusInput.placeholder = "Marval Projects Stage";
+                    //    const statusInput = window.top.document.createElement("input");
+                    //    statusInput.type = "text";
+                    //    statusInput.value = status;
+                    //    statusInput.placeholder = "Marval Projects Stage";
 
-                        const descriptionInput = window.top.document.createElement("input");
-                        descriptionInput.type = "text";
-                        descriptionInput.value = description;
-                        descriptionInput.placeholder = "Marval Status";
+                    //    const descriptionInput = window.top.document.createElement("input");
+                    //    descriptionInput.type = "text";
+                    //    descriptionInput.value = description;
+                    //    descriptionInput.placeholder = "Marval Status";
 
-                        const removeButton = window.top.document.createElement("button");
-                        removeButton.innerHTML = "Remove";
-                        removeButton.onclick = function () {
-                            container.removeChild(div);
-                        };
+                    //    const removeButton = window.top.document.createElement("button");
+                    //    removeButton.innerHTML = "Remove";
+                    //    removeButton.onclick = function () {
+                    //        container.removeChild(div);
+                    //    };
 
-                        div.appendChild(statusInput);
-                        div.appendChild(descriptionInput);
-                        div.appendChild(removeButton);
-                        container.appendChild(div);
-                    }                         
+                    //    div.appendChild(statusInput);
+                    //    div.appendChild(descriptionInput);
+                    //    div.appendChild(removeButton);
+                    //    container.appendChild(div);
+                    //}                         
 
-                    function saveItems() {
-                        const container = window.top.document.getElementById("itemsContainer");
-                        const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                        const items = [];
-                        //     $('#saveItemsButton div').insertAfter('#saveItemsButton');
-                        $('#savebuttonConfirm').show();
-                        container.querySelectorAll(".item").forEach(div => {
-                            const status = div.querySelector("input:nth-child(1)").value;
-                            const description = div.querySelector("input:nth-child(2)").value;
-                            items.push([status, description]);
-                        });
+                    //function saveItems() {
+                    //    const container = window.top.document.getElementById("itemsContainer");
+                    //    const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                    //    const items = [];
+                    //    //     $('#saveItemsButton div').insertAfter('#saveItemsButton');
+                    //    $('#savebuttonConfirm').show();
+                    //    container.querySelectorAll(".item").forEach(div => {
+                    //        const status = div.querySelector("input:nth-child(1)").value;
+                    //        const description = div.querySelector("input:nth-child(2)").value;
+                    //        items.push([status, description]);
+                    //    });
 
-                        const data = { "items": items };
-                        field.value = JSON.stringify(data);
-                        // alert("Items saved!");
-                    }
+                    //    const data = { "items": items };
+                    //    field.value = JSON.stringify(data);
+                    //    // alert("Items saved!");
+                    //}
                     var style = $('<style>');
 
                     // Add your CSS rules to the style element
@@ -515,41 +515,41 @@
                         $('input#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value').closest('span.formSpan').hide();
                         var template = document.querySelector('template').content;
                         this._element = window.top.document.importNode(template, true);
-                        this._testElement = this._element.querySelector("#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet");
-                        $('#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet').append(`
-                        <fieldset style="width: 400px" id="fieldMapping">
-                        <br><span style="font-weight: bold">Marval Projects to MSM Field Mapping</span> <br><br>
-                        <div id="itemsContainer"></div>
-                        <button type="button" id="addNewItemButton">Add New Item</button>
-                        <button type="button" id="saveItemsButton">Save</button>
+                    //    this._testElement = this._element.querySelector("#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet");
+                    //    $('#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet').append(`
+                    //    <fieldset style="width: 400px" id="fieldMapping">
+                    //    <br><span style="font-weight: bold">Marval Projects to MSM Field Mapping</span> <br><br>
+                    //    <div id="itemsContainer"></div>
+                    //    <button type="button" id="addNewItemButton">Add New Item</button>
+                    //    <button type="button" id="saveItemsButton">Save</button>
 
-                        <div id="savebuttonConfirm" style="color:green;font-weight:bold; display: none"><br><span style="color:green">Items Saved</span><br>Remember to click Apply on the bottom right to commit your changes</div>
-                        </fieldset>
-                        <br><br>
-                        <fieldset style="width: 400px" id="testPlugin">
-                            <legend>Test Plugin</legend>
-                            <span class="formSpan">
-                                <button id="testplugin">Test</button>
-                                <div id="responseContainer">
-                                    <pre id="formattedResponse"></pre>
-                                </div>
-                            </span>
-                        </fieldset>
-                    `);
-                        window.top.document.getElementById("addNewItemButton").onclick = addItem;
-                        window.top.document.getElementById("saveItemsButton").onclick = saveItems;
+                    //    <div id="savebuttonConfirm" style="color:green;font-weight:bold; display: none"><br><span style="color:green">Items Saved</span><br>Remember to click Apply on the bottom right to commit your changes</div>
+                    //    </fieldset>
+                    //    <br><br>
+                    //    <fieldset style="width: 400px" id="testPlugin">
+                    //        <legend>Test Plugin</legend>
+                    //        <span class="formSpan">
+                    //            <button id="testplugin">Test</button>
+                    //            <div id="responseContainer">
+                    //                <pre id="formattedResponse"></pre>
+                    //            </div>
+                    //        </span>
+                    //    </fieldset>
+                    //`);
+                        //window.top.document.getElementById("addNewItemButton").onclick = addItem;
+                        //window.top.document.getElementById("saveItemsButton").onclick = saveItems;
 
                         var that = this;
-                        const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                        const container = document.getElementById("itemsContainer");
-                        if (field.value) {
-                            const data = JSON.parse(field.value);
-                            const items = data.items;");
-                            items.forEach((item, index) => {
-                                //console.log("Items are %s and %s ", item[0], item[1]);
-                                addItem(item[0], item[1]);
-                            });
-                        }
+                        //const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                        //const container = document.getElementById("itemsContainer");
+                        //if (field.value) {
+                        //    const data = JSON.parse(field.value);
+                        //    const items = data.items;");
+                        //    items.forEach((item, index) => {
+                        //        //console.log("Items are %s and %s ", item[0], item[1]);
+                        //        addItem(item[0], item[1]);
+                        //    });
+                        //}
                         $(document).ready(function () {
                             //printAllProjects();
                             $('#testPlugin').on('click', '#testplugin', function (event) {
@@ -609,16 +609,16 @@
                         }
                     }
                 },
-                _loadItems: function () {
-                    var that = this;
-                    const field = document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                    const container = document.getElementById("itemsContainer");
-                    const items = JSON.parse(field.value);
-                    //console.log("Adding item in load items ");
-                    items.forEach((item, index) => {
-                        that.addItem(item[0], item[1]);
-                    });
-                },
+                //_loadItems: function () {
+                //    var that = this;
+                //    const field = document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
+                //    const container = document.getElementById("itemsContainer");
+                //    const items = JSON.parse(field.value);
+                //    //console.log("Adding item in load items ");
+                //    items.forEach((item, index) => {
+                //        that.addItem(item[0], item[1]);
+                //    });
+                //},
                 _preProcessResourceString: function (content) {
                     var resourceTagRegEx = /@@\w+\b/g;
                     var match = resourceTagRegEx.exec(content);
