@@ -7,16 +7,22 @@ This plugin allows you to **Create**, **View**, **Link** and **Unlink** Marval P
 
 ## MSM-MarvalProjects integration 
 
-The endpoint URL (normally https://graph.openproject.com/marvalIntegration.cfm) can be modified if required.
+The endpoint URL can be modified if required.
 
 ## Installation
 
+Installation of Open Projects:
+
+- Follow the instructions of the Open Projects Installation: https://www.openproject.org/docs/installation-and-operations/installation/ (We recommend using the docker installation)
+- Create a custom attribute, tap on your profile in the top right -> administration -> projects -> + project attribute in the top right -> appriopiately name it, section : project attributes, tick required for all projects and default value 0
+
 Once the plugin has been installed you will need to configure the following settings within the plugin page:
 
-+ *Endpoint URL (Optional)* : The URL of the Marval Projects Endpoint. Normally not required, defaults to https://graph.openproject.com/marvalIntegration.cfm
-+ *Marval Projects API Key* : Your API key in Marval Projects.
-+ *Marval Projects Workspace Name* : Your workspace name in Marval Projects. This is used to generate your link to open the project from Marval.
-+ *Marval API Key* : Your Marval API Key
++ *Api Key : Your open project API Key, you can find this by:
+- Going to your open project app, then go to your profile in the top right corner
+- Tap on account settings then go to Access Tokens in the left hand side bar
+- Then create an access token and save it
+- Return back to MSM and enter in this Api Key in the plugin page!
 
 
 ## Usage
