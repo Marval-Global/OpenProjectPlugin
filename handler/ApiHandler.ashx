@@ -270,7 +270,6 @@ public class ApiHandler : PluginHandler
             {
                 string postData = reader.ReadToEnd();
                 this.jsonProjectData = postData;
-                Log.Information("Post data is " + postData);
                 try
                 {
                     JObject parsedpostDataResponse = JObject.Parse(postData);
@@ -278,7 +277,6 @@ public class ApiHandler : PluginHandler
                     // var project = parsedpostDataResponse["project"].ToString() ?? string.Empty;
                     //  var RequestTypeAcronym = parsedpostDataResponse["requesttypeacronym"].ToString() ?? string.Empty;
                     // var _requestNumber = parsedpostDataResponse["requestnumber"].ToString() ?? string.Empty;
-                    Log.Information("Description is " + description);
                     // Process description as needed
                 }
                 catch (Exception ex)
@@ -347,7 +345,6 @@ public class ApiHandler : PluginHandler
                     if (!customField2Value.Split(',').Contains(reqIdValue) && link != "FALSE")
                     {
                         cInput = customField2Value + "," + reqIdValue;
-                        Log.Information("customfield 2 is now appending to: " + cInput);
                     }
                     else if(link == "FALSE")
                     {
@@ -360,7 +357,6 @@ public class ApiHandler : PluginHandler
                         //     cInput = string.Join(",", parts); // recombine the list
 
                         cInput = parts.Count == 0 ? "0" : string.Join(",", parts);
-                        Log.Information("customfield 2 after unlinking reqId: " + cInput);
                     }
                     //cInput = context.Request.QueryString["reqId"];
                 }else if (!string.IsNullOrEmpty(context.Request.QueryString["reqId"]))
@@ -379,7 +375,6 @@ public class ApiHandler : PluginHandler
 
                 string payloadJson3 = JsonConvert.SerializeObject(myPayload3);
                 projectId = context.Request.QueryString["id"];
-                Log.Information("mypayload is ", payloadJson3);
 
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects/" + projectId, payloadJson3, "PATCH");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth3;
@@ -489,7 +484,6 @@ public class ApiHandler : PluginHandler
                 context.Response.Write("");
                 break;
             case "CompleteProject":
-                Log.Information("In CompleteProject");
 
                 this.MoveMSMStatusComplete(context.Request, CloseStatus);
 
@@ -608,7 +602,6 @@ public class ApiHandler : PluginHandler
             }
             HttpContext.Current.Response.StatusCode = (int)resStatus;
             HttpContext.Current.Response.ContentType = "application/json";
-            Log.Information("res is" + res);
             HttpContext.Current.Response.Write(res);
             HttpContext.Current.Response.End();
             return null;
