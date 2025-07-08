@@ -764,7 +764,7 @@
                     e.preventDefault();
                     const msg = document.createElement("div");
                     msg.id = "linkStatusNotice";
-                    msg.style.marginTop = "10px";
+                    msg.style.marginTop = "20px";
                     msg.style.fontWeight = "bold";
                     msg.style.color = "green";
                     msg.textContent = "Project created successfully!";
@@ -800,12 +800,19 @@
                             },
                             body: JSON.stringify(payload)
                         }); if (!res.ok) {
-                            const errorText = await res.text(); // Helpful for debugging server errors
+                            const errorText = await res.text(); 
                             throw new Error(`HTTP error ${res.status}: ${errorText}`);
                         }
                         const result = await res.json();
+                        this._renderProjects();
+                        $("#linkStatusNotice").fadeIn(2000);
+                        $("#linkStatusNotice").fadeOut(2000);
                     } catch (error) {
                         console.error("we have an error", error);
+                        $("#linkStatusNotice").fadeIn(2000);
+                        msg.style.color = "red";
+                        msg.textContent = "Project creation unsuccessful!";
+                        $("#linkStatusNotice").fadeOut(2000);
                     }
 
                 },
@@ -1406,7 +1413,7 @@
                             msg.style.marginTop = "10px";
                             msg.style.fontWeight = "bold";
                             msg.style.color = success ? "green" : "red";
-                            msg.textContent = success ? "Project linked successfully!2x" : "Failed to link project.";
+                            msg.textContent = success ? "Project linked successfully!" : "Failed to link project.";
                             wrapperDiv.appendChild(msg);
                         }
                     });
