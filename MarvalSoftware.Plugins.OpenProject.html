@@ -184,8 +184,8 @@
 
             .MarvalSoftware-OpenProject > .newIssue > .issueSummaryWrapper {
                 position: absolute;
-                left: 120px;
-                right: 90px;
+                left: 190px;
+                right: -100px;
                 bottom: 28px;
             }
 
@@ -193,7 +193,7 @@
                     box-sizing: border-box;
                     padding: 2px;
                     position: relative;
-                    right: -70px;
+                    right: 0px;
                     height: 22px;
                     width: 100%;
                     border: 1px solid #CCC;
@@ -297,7 +297,7 @@
                     </select>
                 </div>
             </div>
-            <div class="issueSummaryWrapper">
+            <div class="issueSummaryWrapper" style="width:430px" maxlength =" 255">
                 <input type="text" placeholder="Project Description" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
             <button id="createProjectTwo">Create</button>
@@ -841,10 +841,10 @@
                             var styleElement = window.top.document.createElement("style");
                             window.top.document.body.appendChild(styleElement);
 
-                            styleElement.sheet.insertRule(
-                                ".MarvalSoftware-OpenProject-quick-menu-item::before { content: ''; }",
-                                0
-                            );
+                            //styleElement.sheet.insertRule(
+                            //    ".MarvalSoftware-OpenProject-quick-menu-item::before { content: ''; }",
+                            //    0
+                            //);
 
                             this._issuesElement.style.backgroundImage = "";
 
@@ -864,14 +864,15 @@
                     });
                 },
 
-                _createProject: function (sender, e) {
+                _createProject: async function (sender, e) {
+                    e.preventDefault();
                     const msg = document.createElement("div");
                     msg.id = "linkStatusNotice";
                     msg.style.marginTop = "10px";
                     msg.style.fontWeight = "bold";
                     msg.style.color = "green";
-                    msg.textContent = "Project linked successfully!";
-                    msg.display = "none";
+                    msg.textContent = "Project created successfully!";
+                    msg.style.display = "none";
                     let issueDiv = window.top.document.getElementsByClassName("newIssue")[0];
                     issueDiv.appendChild(msg);
 
@@ -894,42 +895,71 @@
                         }
                     }
                     
-                    e.preventDefault();
+                    //e.preventDefault();
+
+                    try {
+                        const res = await fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
+                           method: "POST",
+                            headers: {
+                               "Content-Type": "application/json; charset=utf-8"
+                            },
+                            body: JSON.stringify(payload)
+                        }); if (!res.ok) {
+                            const errorText = await res.text(); // Helpful for debugging server errors
+                            throw new Error(`HTTP error ${res.status}: ${errorText}`);
+                        }
+                       console.log("awaited res is, ", res);
+                        const result = await res.json();
+                        //return result;
+                        console.log("result is", result);
+                    } catch(error) {
+                        console.error("we have an error", error);
+                    }
+
+                    /** try {
+    const response = await fetch(request);
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}*/
                     
-                    fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json; charset=utf-8"
-                        },
-                        body:JSON.stringify(payload)
-                    }).then(response => {
-                        if (!response.ok) {
-                            throw new Error("Network response was not ok: " + response.statusText);
-                        }
-                        return response.json()
+                    //fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
+                    //    method: "POST",
+                    //    headers: {
+                    //        "Content-Type": "application/json; charset=utf-8"
+                    //    },
+                    //    body:JSON.stringify(payload)
+                    //}).then(response => {
+                    //    console.log("we are returning a response");
+                    //    if (!response.ok) {
+                    //        throw new Error("Network response was not ok: " + response.statusText);
+                    //    } else {
+                    //        this._renderProjects();
+                    //        const msg = window.top.document.getElementById("linkStatusNotice");
+                    //        if (msg) {
+                    //            msg.style.display = "block";
+                    //            $(msg).fadeOut(1000, function () {
+                    //                this.remove();
+                    //            });
+                    //        }
+                    //    }
+                    //    //return response.json()
 
-                    }).then(result => {
-                        this._renderProjects();
-                        const msg = window.top.document.getElementById("linkStatusNotice");
-                        if (msg) {
-                            msg.style.display = "block";
-                            $(msg).fadeOut(1000, function () {
-                                this.remove(); 
-                            });
-                        }
-                    }).catch(error => {
-                        let msg = window.top.document.getElementById("linkStatusNotice");
-                        if (msg) {
-                            msg.style.display = "block";
-                            msg.style.color = "red";
-                            msg.textContent = "Project not linked correctly!";
-                            $(msg).fadeOut(1000, function () {
-                                this.remove(); 
-                            });
-                        }
+                    //}).catch(error => {
+                    //    let msg = window.top.document.getElementById("linkStatusNotice");
+                    //    if (msg) {
+                    //        msg.style.display = "block";
+                    //        msg.style.color = "red";
+                    //        msg.textContent = "Project not linked correctly!";
+                    //        $(msg).fadeOut(1000, function () {
+                    //            this.remove();
+                    //        })
+                    //    }
 
-                        console.error("Failed to create projects: ", error);
-                    });
+                    //    console.error("Failed to create projects: ", error);
+                    //});
                 },
 
                 _printAllProjects: function () {
@@ -1372,12 +1402,23 @@
                     styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item { content: '2'; position: relative; background-image: url(" + this._getPluginPath() + "img/openproject_32.png); }", 0);
                     $.ajax({
                         type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=GetOpenProjectProjects&requestId=" + RequestID,
+                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects2&requestId=" + RequestID,
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (result) {
+                            console.log("succ res is", result);
+                            const allProjects = result._embedded?.elements || [];
 
-                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + result.data.projects.length + "';  }", 0);
+                            const matchingProjectCount = allProjects.filter(project => {
+                                const field = project.customField2 || "";
+                                const ids = field.split(",").map(id => id.trim());
+                                return ids.includes(String(RequestID));
+                            }).length;
+                            console.log("cur req id is: ", RequestID);
+                            console.log("Number of matching projects:", matchingProjectCount);
+
+                            //should be + result.count
+                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + matchingProjectCount + "';  }", 0);
                         }.bind(this),
                         error: function () {
                             console.log("Have error loading projects")
@@ -1515,7 +1556,7 @@
                             msg.style.marginTop = "10px";
                             msg.style.fontWeight = "bold";
                             msg.style.color = success ? "green" : "red";
-                            msg.textContent = success ? "Project linked successfully!" : "Failed to link project.";
+                            msg.textContent = success ? "Project linked successfully!2x" : "Failed to link project.";
                             wrapperDiv.appendChild(msg);
                         }
                     });
