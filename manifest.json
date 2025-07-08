@@ -3,7 +3,7 @@
   "Organisation": "MarvalSoftware",
   "DisplayName": "@@PluginDisplayname",
   "Icon": "img/openproject_16.png",
-  "Version": "4.9",
+  "Version": "0.1",
   "SupportedVersions": [
      "15.7.0",
      "15.7.1",
@@ -22,7 +22,8 @@
   "HtmlImportFile": "MarvalSoftware.Plugins.OpenProject.html",
   "TagName": "marval-software-plugins-openproject",
   "GlobalSettings": [
-    "@@APIKEY"
+    "@@APIKEY",
+    "@@CUSTOMATTRIBUTE"
     
   ],
   "QuickSearchTypes": [
