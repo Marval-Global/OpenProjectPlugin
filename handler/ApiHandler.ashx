@@ -444,13 +444,22 @@ public class ApiHandler : PluginHandler
 
                 dynamic parsedBody = JsonConvert.DeserializeObject(requestBody);
 
-                var myPayload = new
-                {
-                    name = parsedBody.name, //get custom field 1 from global settings
-                    userCustomField = reqId, //need to set these as blank when we are creating a new project, 
-                    customField3 = "0" //for new users they only need one customfield
-                };
+                //var myPayload = new
+                //{
+                //    name = parsedBody.name, //get custom field 1 from global settings
+                //    [userCustomField] = reqId, //need to set these as blank when we are creating a new project, 
+                //    customField3 = "0" //for new users they only need one customfield
+                //};
+                //string payloadJson = JsonConvert.SerializeObject(myPayload);
+                var myPayload = new Dictionary<string, object> //hash map, object can be different types
+                    {
+                        { "name", parsedBody.name },
+                        { userCustomField, reqId }, // dynamic key
+                        { "customField3", "0" }
+                    };
+
                 string payloadJson = JsonConvert.SerializeObject(myPayload);
+
                 if (parsedBody.copy == true)
                 {
                     curUrl = "http://localhost:8080/api/v3/projects/" + parsedBody.id + "/copy";
@@ -459,6 +468,7 @@ public class ApiHandler : PluginHandler
                 {
                     curUrl = "http://localhost:8080/api/v3/projects";
                 }
+                Log.Information("payload is" + myPayload);
                 httpWebRequest = ApiHandler.BuildRequest(curUrl, payloadJson, "POST");
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
                 httpWebRequest.ContentType = "application/json";
