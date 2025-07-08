@@ -13,8 +13,8 @@
             display: block;
         }
 
-        .linkProjectButton{
-            cursor:pointer;
+        .linkProjectButton {
+            cursor: pointer;
         }
 
         .MarvalSoftware-OpenProject {
@@ -297,7 +297,7 @@
                     </select>
                 </div>
             </div>
-            <div class="issueSummaryWrapper" style="width:430px" maxlength =" 255">
+            <div class="issueSummaryWrapper" style="width:430px" maxlength=" 255">
                 <input type="text" placeholder="Project Description" id="projectDescription" class="text" style="width:430px" maxlength="255" />
             </div>
             <button id="createProjectTwo">Create</button>
@@ -408,74 +408,11 @@
                 _reporterCheckboxLabel: null,
                 _reporterCheckboxElement: null,
                 _attachmentsCheckboxList: null,
+                userCustomField: null,
 
                 init: function () {
                     openProject = this;
-                    //setTimeout(() => {
-                    //    var PWelement = $('#ctl00_ctl00_cph_entityHeaderText').text();
-                    //    var currentUrl = window.top.location.href;
-                    //    if (currentUrl.includes("Plugin.aspx") && PWelement == 'MarvalSoftware.Plugins.OpenProject') {
-                    //        $("#" + "attributesControl_attribute_28_entry_28").val("test");
-                    //        const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");
-                    //        $(keyelement2).val("test");
-                    //        keyelement2.style.display = 'none';
-                    //    }
-                    //}, 1000);
-                    //const keyelement2 = window.top.document.getElementById("attributesControl_attribute_28_entry_28");             
 
-                    //$(keyelement2).val("test");
-                    //
-                    //const keyelement = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_key");
-                    //if (keyelement) {
-                    //    keyelement.style.display = 'none';
-                    //}
-                    //function addItem(status = "", description = "") {
-                    //    if (typeof status !== "string") status = ""; // Ensure status is a string
-                    //    if (typeof description !== "string") description = ""; // Ensure description is a string
-
-                    //    const container = window.top.document.getElementById("itemsContainer");
-
-                    //    const div = window.top.document.createElement("div");
-                    //    div.className = "item";
-
-                    //    const statusInput = window.top.document.createElement("input");
-                    //    statusInput.type = "text";
-                    //    statusInput.value = status;
-                    //    statusInput.placeholder = "Marval Projects Stage";
-
-                    //    const descriptionInput = window.top.document.createElement("input");
-                    //    descriptionInput.type = "text";
-                    //    descriptionInput.value = description;
-                    //    descriptionInput.placeholder = "Marval Status";
-
-                    //    const removeButton = window.top.document.createElement("button");
-                    //    removeButton.innerHTML = "Remove";
-                    //    removeButton.onclick = function () {
-                    //        container.removeChild(div);
-                    //    };
-
-                    //    div.appendChild(statusInput);
-                    //    div.appendChild(descriptionInput);
-                    //    div.appendChild(removeButton);
-                    //    container.appendChild(div);
-                    //}                         
-
-                    //function saveItems() {
-                    //    const container = window.top.document.getElementById("itemsContainer");
-                    //    const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                    //    const items = [];
-                    //    //     $('#saveItemsButton div').insertAfter('#saveItemsButton');
-                    //    $('#savebuttonConfirm').show();
-                    //    container.querySelectorAll(".item").forEach(div => {
-                    //        const status = div.querySelector("input:nth-child(1)").value;
-                    //        const description = div.querySelector("input:nth-child(2)").value;
-                    //        items.push([status, description]);
-                    //    });
-
-                    //    const data = { "items": items };
-                    //    field.value = JSON.stringify(data);
-                    //    // alert("Items saved!");
-                    //}
                     var style = $('<style>');
 
                     // Add your CSS rules to the style element
@@ -501,8 +438,7 @@
 
                     // Append the style element to the head section of your document
                     $('head').append(style);
-                    $(document).ready(function() {
-                    });
+                    
 
                     var currentUrl = window.top.location.href;
 
@@ -515,43 +451,11 @@
                         $('input#ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value').closest('span.formSpan').hide();
                         var template = document.querySelector('template').content;
                         this._element = window.top.document.importNode(template, true);
-                    //    this._testElement = this._element.querySelector("#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet");
-                    //    $('#ctl00_ctl00_cph_maintenance_globalSettingsFieldSet').append(`
-                    //    <fieldset style="width: 400px" id="fieldMapping">
-                    //    <br><span style="font-weight: bold">Marval Projects to MSM Field Mapping</span> <br><br>
-                    //    <div id="itemsContainer"></div>
-                    //    <button type="button" id="addNewItemButton">Add New Item</button>
-                    //    <button type="button" id="saveItemsButton">Save</button>
 
-                    //    <div id="savebuttonConfirm" style="color:green;font-weight:bold; display: none"><br><span style="color:green">Items Saved</span><br>Remember to click Apply on the bottom right to commit your changes</div>
-                    //    </fieldset>
-                    //    <br><br>
-                    //    <fieldset style="width: 400px" id="testPlugin">
-                    //        <legend>Test Plugin</legend>
-                    //        <span class="formSpan">
-                    //            <button id="testplugin">Test</button>
-                    //            <div id="responseContainer">
-                    //                <pre id="formattedResponse"></pre>
-                    //            </div>
-                    //        </span>
-                    //    </fieldset>
-                    //`);
-                        //window.top.document.getElementById("addNewItemButton").onclick = addItem;
-                        //window.top.document.getElementById("saveItemsButton").onclick = saveItems;
 
                         var that = this;
-                        //const field = window.top.document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                        //const container = document.getElementById("itemsContainer");
-                        //if (field.value) {
-                        //    const data = JSON.parse(field.value);
-                        //    const items = data.items;");
-                        //    items.forEach((item, index) => {
-                        //        //console.log("Items are %s and %s ", item[0], item[1]);
-                        //        addItem(item[0], item[1]);
-                        //    });
-                        //}
                         $(document).ready(function () {
-                            //printAllProjects();
+
                             $('#testPlugin').on('click', '#testplugin', function (event) {
                                 //  window.top.document.getElementById('testPlugin').scrollIntoView();
                                 event.preventDefault(); // Prevent the default form submission behavior
@@ -609,16 +513,12 @@
                         }
                     }
                 },
-                //_loadItems: function () {
-                //    var that = this;
-                //    const field = document.getElementById("ctl00_ctl00_cph_maintenance_globalSettingsRepeater_ctl04_value");
-                //    const container = document.getElementById("itemsContainer");
-                //    const items = JSON.parse(field.value);
-                //    //console.log("Adding item in load items ");
-                //    items.forEach((item, index) => {
-                //        that.addItem(item[0], item[1]);
-                //    });
-                //},
+
+                _getCustomField: async function () {
+                    let customFieldUrl = this._getPluginPath() + "handler/ApiHandler.ashx?action=getCustomField";
+                    var userCustomField = await (await fetch(customFieldUrl)).text();
+                    return userCustomField;
+                },
                 _preProcessResourceString: function (content) {
                     var resourceTagRegEx = /@@\w+\b/g;
                     var match = resourceTagRegEx.exec(content);
@@ -638,7 +538,7 @@
                         var issueTemplate = document.querySelector(".issueTemplate").content;
                         var issueElement = window.top.document.importNode(issueTemplate, true);
                         var issueTemplateDiv = issueElement.querySelector(".issue");
-                    
+
 
                         $(document).ready(function () {
                             $(document).on('click', '.content', function () {
@@ -660,7 +560,7 @@
                         issueElement.querySelector(".name").textContent = project.name;
 
                         let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                        issueElement.querySelector(".unlink").addEventListener('click', function () {openProject._linkNewProject(project.id, reqId, project.customField2, "FALSE")}, false);
+                        issueElement.querySelector(".unlink").addEventListener('click', function () { openProject._linkNewProject(project.id, reqId, project[userCustomField], "FALSE") }, false);
                         //var itemsTotal = project.itemsActive + project.itemsCompleted;
                         let id = project.id;
 
@@ -673,8 +573,8 @@
                         if (!this._issuesElement.textContent.indexOf(issueElement.textContent) != -1) {
                             this._issuesElement.appendChild(issueElement);
                         }
-                    });            
-                    
+                    });
+
                 }, _getAllWorkPackages: async function (id) {
                     try {
 
@@ -692,12 +592,12 @@
                             throw new Error("Network response was not ok: " + response.statusText);
                         }
 
-                        const result = await response.json(); 
-                        return result; 
+                        const result = await response.json();
+                        return result;
 
                     } catch (error) {
                         console.error("Failed to fetch work packages: ", error);
-                        return null; 
+                        return null;
                     }
                 },
 
@@ -835,23 +735,19 @@
                                 } else {
                                     projectIds.add(project.id);
                                 }
+                                
                             });
 
 
                             var styleElement = window.top.document.createElement("style");
                             window.top.document.body.appendChild(styleElement);
 
-                            //styleElement.sheet.insertRule(
-                            //    ".MarvalSoftware-OpenProject-quick-menu-item::before { content: ''; }",
-                            //    0
-                            //);
-
                             this._issuesElement.style.backgroundImage = "";
 
                             const allProjects = result._embedded?.elements || [];
 
                             const matchingProjects = allProjects.filter(project => {
-                                const field = project.customField2 || "";
+                                const field = project[userCustomField] || "";
                                 const ids = field.split(",").map(id => id.trim());
                                 return ids.includes(RequestID);
                             });
@@ -881,7 +777,8 @@
                     let selectedID = $("#ProjectTemplateSelection").val();
                     let reqId = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
                     let inputtext = $("#projectDescription").val();
-                    if (selectedIndex > 0) {;
+                    if (selectedIndex > 0) {
+                        ;
                         payload = {
                             name: inputtext,
                             copy: true,
@@ -894,72 +791,23 @@
                             id: selectedID
                         }
                     }
-                    
-                    //e.preventDefault();
 
                     try {
                         const res = await fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
-                           method: "POST",
+                            method: "POST",
                             headers: {
-                               "Content-Type": "application/json; charset=utf-8"
+                                "Content-Type": "application/json; charset=utf-8"
                             },
                             body: JSON.stringify(payload)
                         }); if (!res.ok) {
                             const errorText = await res.text(); // Helpful for debugging server errors
                             throw new Error(`HTTP error ${res.status}: ${errorText}`);
                         }
-                       console.log("awaited res is, ", res);
                         const result = await res.json();
-                        //return result;
-                        console.log("result is", result);
-                    } catch(error) {
+                    } catch (error) {
                         console.error("we have an error", error);
                     }
 
-                    /** try {
-    const response = await fetch(request);
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}*/
-                    
-                    //fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=createProject&reqId=" + reqId, {
-                    //    method: "POST",
-                    //    headers: {
-                    //        "Content-Type": "application/json; charset=utf-8"
-                    //    },
-                    //    body:JSON.stringify(payload)
-                    //}).then(response => {
-                    //    console.log("we are returning a response");
-                    //    if (!response.ok) {
-                    //        throw new Error("Network response was not ok: " + response.statusText);
-                    //    } else {
-                    //        this._renderProjects();
-                    //        const msg = window.top.document.getElementById("linkStatusNotice");
-                    //        if (msg) {
-                    //            msg.style.display = "block";
-                    //            $(msg).fadeOut(1000, function () {
-                    //                this.remove();
-                    //            });
-                    //        }
-                    //    }
-                    //    //return response.json()
-
-                    //}).catch(error => {
-                    //    let msg = window.top.document.getElementById("linkStatusNotice");
-                    //    if (msg) {
-                    //        msg.style.display = "block";
-                    //        msg.style.color = "red";
-                    //        msg.textContent = "Project not linked correctly!";
-                    //        $(msg).fadeOut(1000, function () {
-                    //            this.remove();
-                    //        })
-                    //    }
-
-                    //    console.error("Failed to create projects: ", error);
-                    //});
                 },
 
                 _printAllProjects: function () {
@@ -989,7 +837,7 @@
                 },
 
                 _loadProjectTemplates: function () {
-                    
+
                     fetch(openProject._getPluginPath() + "handler/ApiHandler.ashx?action=getOpenProjectTemplates", {
                         method: "GET",
                         headers: {
@@ -1166,7 +1014,7 @@
                     eventManager.addHandler(this._sendMessageButtonTwo, "click", this._createProject, this);
 
                     //this._reporterCheckboxLabel = this._issueOptionsElement.querySelector("label");
-                   // this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
+                    // this._reporterCheckboxElement = this._issueOptionsElement.querySelector("input");
                     //eventManager.addHandler(this._selectAttachmentElement, "click", this._showAttachmentsPopup, this);
                     //eventManager.addHandler(this._createElement, "click", this._createElement_click, this);
                     eventManager.addHandler(this._summaryElement, "input", this._handleInput, this);
@@ -1174,24 +1022,24 @@
                     //this._typeElement.style.display = 'none';
                     this.appendChild(this._element);
                 },
-                _PingCheck: function () {
+                //_PingCheck: function () {
 
-                    $.ajax({
-                        type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=EndpointPingCheck",
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (result) {
-                            if (result.errors && result.errors[0]) {
-                                this._errorPopupMessage(result.errors[0].message);
-                            }
-                        }.bind(this),
-                        error: function (error) {
-                            console.log("Have response of ping check failure as ", error)
-                            this._errorPopup();
-                        }.bind(this)
-                    });
-                },
+                //    $.ajax({
+                //        type: "GET",
+                //        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=EndpointPingCheck",
+                //        contentType: "application/json; charset=utf-8",
+                //        dataType: "json",
+                //        success: function (result) {
+                //            if (result.errors && result.errors[0]) {
+                //                this._errorPopupMessage(result.errors[0].message);
+                //            }
+                //        }.bind(this),
+                //        error: function (error) {
+                //            console.log("Have response of ping check failure as ", error)
+                //            this._errorPopup();
+                //        }.bind(this)
+                //    });
+                //},
                 _handleInput: function () {
                     //this._summaryElement.value.length > 0 && this._typeElement.selectedIndex > 0 ? this._createElement.disabled = false : this._createElement.disabled = true;
                 },
@@ -1269,7 +1117,7 @@
                     //                     var indexToRemove = this._selectedAttachmentIds.indexOf(value);
                     //                     this._selectedAttachmentIds.splice(indexToRemove, 1);
                     //                 }
-                                                                         
+
                     //             //this._setSelectedAttachmentCount(this._selectedAttachmentIds.length);
                     //         }
                     //     }, this)
@@ -1315,9 +1163,9 @@
                                 const projects = allProjectsResult._embedded?.elements || [];
 
                                 projects.forEach(project => {
-                                    const customField = project.customField2 || "";
+                                    const customField = project[userCustomField] || "";
                                     const identifiers = customField.split(",").map(id => id.trim());
-                         
+
                                 });
                             } catch (error) {
                                 console.error("Failed to process projects:", error);
@@ -1397,33 +1245,35 @@
                     var styleElement = window.top.document.createElement("style");
                     window.top.document.body.appendChild(styleElement);
                     var RequestID = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getPage()._requestId;
-                   // console.log("Style element is ", styleElement);
-                    //console.log("Style element sheet is ", styleElement.sheet);
-                    styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item { content: '2'; position: relative; background-image: url(" + this._getPluginPath() + "img/openproject_32.png); }", 0);
-                    $.ajax({
-                        type: "GET",
-                        url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects2&requestId=" + RequestID,
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (result) {
-                            console.log("succ res is", result);
-                            const allProjects = result._embedded?.elements || [];
+                    openProject._getCustomField()
+                        .then(result => {
+                            userCustomField = result;
+                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item { content: '2'; position: relative; background-image: url(" + this._getPluginPath() + "img/openproject_32.png); }", 0);
+                            $.ajax({
+                                type: "GET",
+                                url: this._getPluginPath() + "handler/ApiHandler.ashx?action=getAllProjects2&requestId=" + RequestID,
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (result) {
+                                    const allProjects = result._embedded?.elements || [];
 
-                            const matchingProjectCount = allProjects.filter(project => {
-                                const field = project.customField2 || "";
-                                const ids = field.split(",").map(id => id.trim());
-                                return ids.includes(String(RequestID));
-                            }).length;
-                            console.log("cur req id is: ", RequestID);
-                            console.log("Number of matching projects:", matchingProjectCount);
+                                    const matchingProjectCount = allProjects.filter(project => {
+                                        const field = project[userCustomField] || "";
+                                        const ids = field.split(",").map(id => id.trim());
+                                        return ids.includes(String(RequestID));
+                                    }).length;
 
-                            //should be + result.count
-                            styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + matchingProjectCount + "';  }", 0);
-                        }.bind(this),
-                        error: function () {
-                            console.log("Have error loading projects")
-                        }.bind(this)
-                    });
+                                    //should be + result.count
+                                    styleElement.sheet.insertRule(".MarvalSoftware-OpenProject-quick-menu-item::before { content: '" + matchingProjectCount + "';  }", 0);
+                                }.bind(this),
+                                error: function () {
+                                    console.log("Have error loading projects")
+                                }.bind(this)
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error getting custom field:", error);
+                        });
 
                     var quickMenuId = window.top.document.querySelector(".quickMenu").id;
                     var quickMenu = MarvalSoftware.UI.Controls.ScriptManager.getInstance().getControl(quickMenuId);
@@ -1444,7 +1294,7 @@
 
                 _preRequisiteCheck: function (sender, e) {
                     this._popup();
-                    this._PingCheck();
+                    //this._PingCheck();
 
                 },
 
@@ -1453,7 +1303,7 @@
 
                     wrapperDiv.innerHTML = `
         <div>
-            
+
             <input type="text" id="projectIdentifierInput" />
             <button id="searchProjectBtn">Search</button>
             <table id="projectResultsTable" border="1" style="margin-top: 10px; width: 100%;">
@@ -1517,16 +1367,16 @@
                                 tbody.appendChild(row);
                             } else {
                                 projects.forEach(project => {
-                                    const customField2 = project.customField2 || "";
+                                    const customField2 = project[userCustomField] || "";
                                     const ids = customField2.split(',').map(id => id.trim()); //get all req id linked to this project by splitting with a comma, then trimming extra spaces \
-                                    if (ids.includes(String(reqId))) return; //project is already linkedl 
+                                    if (ids.includes(String(reqId))) return; //project is already linkedl
                                     const row = document.createElement("tr");
                                     row.innerHTML = `
                                         <td>${project.id}</td>
                                         <td>${project.name}</td>
-                                        <td>${project.customField2}</td>
+                                        <td>${project[userCustomField]}</td>
                                         <td>
-                                        <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project.customField2}">link</button>
+                                        <button class = "linkProjectButton" data-id = "${project.id}" data-name = "${project.name}" data-customField2 = "${project[userCustomField]}">link</button>
                                         </td>
                                     `;
                                     tbody.appendChild(row);
@@ -1549,7 +1399,7 @@
                             const existingNotice = wrapperDiv.querySelector("#linkStatusNotice");
                             if (existingNotice) {
                                 existingNotice.remove();
-                                
+
                             }
                             const msg = document.createElement("div");
                             msg.id = "linkStatusNotice";
