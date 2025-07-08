@@ -452,6 +452,9 @@
                         var template = document.querySelector('template').content;
                         this._element = window.top.document.importNode(template, true);
 
+                        $('#ctl00_ctl00_cph_maintenance_worksWithMsm').removeClass('unsigned');
+                        $('#ctl00_ctl00_cph_maintenance_worksWithMsm').addClass('signed');
+
 
                         var that = this;
                         $(document).ready(function () {
