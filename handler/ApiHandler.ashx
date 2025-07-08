@@ -64,7 +64,23 @@ public class ApiHandler : PluginHandler
     {
         public EntityData data { get; set; }
     }
-    //properties
+    //properties'
+
+    private string userCustomField
+    {
+        get
+        {
+            return this.GlobalSettings["@@CUSTOMATTRIBUTE"];
+        }
+    }
+
+    private string newApiKey
+    {
+        get
+        {
+            return this.GlobalSettings["@@APIKEY"];
+        }
+    }
     private string CustomFieldName
     {
         get
@@ -292,7 +308,7 @@ public class ApiHandler : PluginHandler
     {
         HttpWebRequest httpWebRequest;
 
-        string apiKey = "1f389038cf762946cedf25f8cb4c204730814c764200bd27dbb0dceb521fc0a6";
+        string apiKey = newApiKey;
         string encodedAuth = Convert.ToBase64String(Encoding.ASCII.GetBytes("apikey:"+apiKey));
 
         string reqid = context.Request.QueryString["reqId"];
@@ -313,6 +329,9 @@ public class ApiHandler : PluginHandler
                 context.Response.Write(responseContent3);
 
                 break;
+            case "getCustomField":
+                context.Response.Write(userCustomField); //return custom field
+                break;
             //should do a link project
             //then in frontend we can check if customfield2 already has stuff if in it, if it does we do append and new case link project append, if not we go tro unlink project
             case "unlinkProject": //technically it is still link project
@@ -324,7 +343,7 @@ public class ApiHandler : PluginHandler
                     string customField2Value = (context.Request.QueryString["customField2"]);
                     string reqIdValue = context.Request.QueryString["reqId"];
                     string link =  context.Request.QueryString["link"];
-                    
+
                     if (!customField2Value.Split(',').Contains(reqIdValue) && link != "FALSE")
                     {
                         cInput = customField2Value + "," + reqIdValue;
@@ -338,7 +357,7 @@ public class ApiHandler : PluginHandler
                         .Where(p => p != reqIdValue) // remove the one we're unlinking
                         .ToList();
 
-                   //     cInput = string.Join(",", parts); // recombine the list
+                        //     cInput = string.Join(",", parts); // recombine the list
 
                         cInput = parts.Count == 0 ? "0" : string.Join(",", parts);
                         Log.Information("customfield 2 after unlinking reqId: " + cInput);
@@ -355,7 +374,7 @@ public class ApiHandler : PluginHandler
                 //so if we are linking, attribute = req id, if unlinking we are settting attribute to be blank!
                 var myPayload3 = new
                 {
-                    customField2 = cInput
+                    userCustomField = cInput
                 };
 
                 string payloadJson3 = JsonConvert.SerializeObject(myPayload3);
@@ -379,7 +398,7 @@ public class ApiHandler : PluginHandler
                 }
                 else
                 {
-                    filter = "customField3";
+                    filter = userCustomField;
                     identifier = context.Request.QueryString["reqId"];
                 }
                 httpWebRequest = ApiHandler.BuildRequest("http://localhost:8080/api/v3/projects?filters=[{\""+filter+"\":{\"operator\":\"=\",\"values\":[\"" + identifier + "\"]}}]");
@@ -418,6 +437,7 @@ public class ApiHandler : PluginHandler
             case "createProject":
                 string requestBody;
                 string curUrl;
+                string reqId = context.Request.QueryString["reqId"];
 
                 using(var reader = new StreamReader(context.Request.InputStream))
                 {
@@ -431,7 +451,9 @@ public class ApiHandler : PluginHandler
 
                 var myPayload = new
                 {
-                    name = parsedBody.name
+                    name = parsedBody.name, //get custom field 1 from global settings
+                    userCustomField = reqId, //need to set these as blank when we are creating a new project, 
+                    customField3 = "0" //for new users they only need one customfield
                 };
                 string payloadJson = JsonConvert.SerializeObject(myPayload);
                 if (parsedBody.copy == true)
@@ -446,7 +468,7 @@ public class ApiHandler : PluginHandler
                 httpWebRequest.Headers["Authorization"] = "Basic " + encodedAuth2;
                 httpWebRequest.ContentType = "application/json";
                 string ex = this.ProcessRequest2(httpWebRequest);
-                context.Response.Write("{}");
+                context.Response.Write("{ \"success\": \"successfully created\"}");
 
 
                 break;
@@ -575,13 +597,21 @@ public class ApiHandler : PluginHandler
         fullResponse myRes = new fullResponse();
         try
         {
+            //var resStatus = ((HttpWebResponse)request.WebResponse).StatusCode;
             //request.Headers.Add("Authorization", "Bearer " + this.UserAPIKey);
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
             var res = "";
+            var resStatus = ((HttpStatusCode)response.StatusCode);
             using (StreamReader reader = new StreamReader(response.GetResponseStream()))
             {
-                return reader.ReadToEnd();
+                res = reader.ReadToEnd();
             }
+            HttpContext.Current.Response.StatusCode = (int)resStatus;
+            HttpContext.Current.Response.ContentType = "application/json";
+            Log.Information("res is" + res);
+            HttpContext.Current.Response.Write(res);
+            HttpContext.Current.Response.End();
+            return null;
 
         }
         catch (WebException webEx)
